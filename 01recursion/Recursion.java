@@ -41,11 +41,4 @@ public class Recursion {
     }
     return squirt(n, n / 2.0);
   }
-
-  public static void main(String[] args) {
-    Recursion r = new Recursion();
-
-    System.out.println(r.sqrt(81));
-    System.out.println(r.sqrt(121));
-  }
 }
