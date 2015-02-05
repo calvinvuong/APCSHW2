@@ -8,10 +8,7 @@ public class Recursion {
     if (n < 0) {
       throw new IllegalArgumentException();
     }
-    if (n <= 1) {
-      return n;
-    }
-    return n * fact(n - 1);
+    return n <= 1 ? n : n * fact(n - 1);
   }
 
   public int fib(int n) {
@@ -41,4 +38,26 @@ public class Recursion {
     }
     return squirt(n, n / 2.0);
   }
+
+  public  int sumDigits(int n) {
+    n = Math.abs(n);
+    return n == 0 ? n : (n % 10) + sumDigits(n / 10);
+  }
+
+  private int sumDigitsTailHelper(int sum, int n) {
+    n = Math.abs(n);
+    return n == 0 ? sum + n : sumDigitsTailHelper(n % 10 + sum, n / 10);
+  }
+
+  public int sumDigitsTail(int n) {
+    return sumDigitsTailHelper(0, n);
+  }
+
+  /**
+  public static void main(String[] args) {
+    Recursion r = new Recursion();
+    System.out.println(r.sumDigitsTail(-874));
+    System.out.println(r.sumDigits(-874));
+  }
+  */
 }
