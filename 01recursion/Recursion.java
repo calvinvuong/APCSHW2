@@ -53,11 +53,21 @@ public class Recursion {
     return sumDigitsTailHelper(0, n);
   }
 
-  /**
+  private boolean primeHelper(int n, int c) {
+    if (c * c > n) {
+      return true;
+    }
+    return n % c == 0 ? false : primeHelper(n, c + 1);
+  }
+
+  public boolean prime(int n) {
+    return n == 1 ? false : primeHelper(n, 2);
+  }
+
   public static void main(String[] args) {
     Recursion r = new Recursion();
-    System.out.println(r.sumDigitsTail(-874));
-    System.out.println(r.sumDigits(-874));
+    for (int i = 0; i < 100; ++i) {
+      System.out.println(i + ": " + r.prime(i));
+    }
   }
-  */
 }
