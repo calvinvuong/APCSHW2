@@ -8,6 +8,9 @@ public class Recursion {
     if (n < 0) {
       throw new IllegalArgumentException();
     }
+    if (n == 0) {
+      return 1;
+    }
     return n <= 1 ? n : n * fact(n - 1);
   }
 
@@ -62,12 +65,5 @@ public class Recursion {
 
   public boolean prime(int n) {
     return n == 1 ? false : primeHelper(n, 2);
-  }
-
-  public static void main(String[] args) {
-    Recursion r = new Recursion();
-    for (int i = 0; i < 100; ++i) {
-      System.out.println(i + ": " + r.prime(i));
-    }
   }
 }
