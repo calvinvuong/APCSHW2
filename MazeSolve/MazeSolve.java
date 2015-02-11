@@ -86,13 +86,14 @@ public class MazeSolve {
     int x = pStart[0];
     int y = pStart[1];
 
+    outputMaze(animate);
+
     try {
       if (maze_[x][y] == 'E') {
         return true;
       }
       if (maze_[x][y] == ' ' || maze_[x][y] == 'S') {
         maze_[x][y] = '@';
-        outputMaze(animate);
         int[] candidate1 = new int[] {
           x + 1, y
         };
@@ -110,7 +111,6 @@ public class MazeSolve {
           return true;
         }
         maze_[x][y] = '.';
-        outputMaze(animate);
       }
     } catch (Exception e) {}
     return false;
