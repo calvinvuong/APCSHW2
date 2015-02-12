@@ -15,6 +15,10 @@ public class KnightsTour {
     board_ = new int[size][size];
   }
 
+  public String name() {
+    return "Lin,Alvin";
+  }
+
   private String go(int x, int y) {
     return ("\033[" + x + ";" + y + "H");
   }
@@ -64,8 +68,6 @@ public class KnightsTour {
   public boolean solve(int[] pStart, int currentMoveNumber) {
     int x = pStart[0];
     int y = pStart[1];
-
-    System.out.println(this);
 
     try {
       if (board_[x][y] != 0) {
