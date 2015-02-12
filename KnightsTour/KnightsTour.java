@@ -26,27 +26,28 @@ public class KnightsTour {
     catch (InterruptedException e) {}
   }
 
-  public void outputBoard() {
-    System.out.print(clear + go(0,0) + "\n");
+  public String toString() {
+    String result = clear + go(0,0) + "\n";
     for (int i = 0; i < board_.length * 3 + 1; ++i) {
-      System.out.print("_");
+      result += "_";
     }
-    System.out.print("\n");
+    result += "\n";
     for (int i = 0; i < board_.length; ++i) {
-      System.out.print("|");
+      result += "|";
       for (int j = 0; j < board_[i].length; ++j) {
         if (board_[i][j] / 10 == 0) {
-          System.out.print(board_[i][j] + " |");
+          result += board_[i][j] + " |";
         } else {
-          System.out.print(board_[i][j] + "|");
+          result += board_[i][j] + "|";
         }
       }
-      System.out.print("\n");
+      result += "\n";
     }
     for (int i = 0; i < board_.length * 3 + 1; ++i) {
-      System.out.print("-");
+      result += "-";
     } 
-    System.out.println("\n" + show);
+    result += "\n" + show;
+    return result;
   }
 
   public void solve() {
@@ -64,12 +65,13 @@ public class KnightsTour {
     int x = pStart[0];
     int y = pStart[1];
 
-    outputBoard();
+    System.out.println(this);
 
     try {
       if (board_[x][y] != 0) {
         return false;
-      } else if (board_.length * board_.length == currentMoveNumber - 1) {
+      }
+      if (board_.length * board_.length == currentMoveNumber) {
         return true;
       }
       board_[x][y] = currentMoveNumber;
@@ -116,5 +118,6 @@ public class KnightsTour {
   public static void main(String[] args) {
     KnightsTour k = new KnightsTour(5);
     k.solve();
+    System.out.println(k);
   }
 }
