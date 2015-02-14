@@ -16,7 +16,7 @@ public class KnightsTour {
   }
 
   public String name() {
-    return "Lin,Alvin";
+    return "lin.alvin";
   }
 
   private String go(int x, int y) {
@@ -118,7 +118,7 @@ public class KnightsTour {
   }
 
   public static void main(String[] args) {
-    KnightsTour k = new KnightsTour(5);
+    KnightsTour k = new KnightsTour(Integer.parseInt(args[0]));
     k.solve();
     System.out.println(k);
   }
