@@ -2,6 +2,19 @@ import java.util.*;
 
 public class MergeSort {
 
+  public static void randomize(int[] a) {
+    Random rand = new Random();
+    for (int i = 0; i < a.length; ++i) {
+      int randIndex = rand.nextInt(a.length - i) + i;
+      if (randIndex == i) {
+        continue;
+      }
+      int tmp = a[i];
+      a[i] = a[randIndex];
+      a[randIndex] = tmp;
+    }
+  }
+
   private static void insert(int[] target, int index, int[] array) {
     for (int i = 0; i < array.length; ++i) {
       target[index + i] = array[i];
@@ -34,14 +47,25 @@ public class MergeSort {
     }
     return mergedList;
   }
+
+  public static int[] sort(int[] a) {
+    if (a.length == 1) {
+      return a;
+    }
+
+    int[] sub1 = Arrays.copyOfRange(a, 0, a.length / 2);
+    int[] sub2 = Arrays.copyOfRange(a, a.length / 2, a.length);
+
+    return merge(sort(sub1), sort(sub2));
+  }
   
   public static void main(String[] args) {
-    int[] a = new int[] {
-      1, 1, 2, 6, 8, 10, 19, 20, 100
-    };
-    int[] b = new int[] {
-      2, 4, 7, 9, 10, 11, 19
-    };
-    System.out.println(Arrays.toString(MergeSort.merge(a, b)));
+    int[] a = new int[99999];
+    for (int i = 0; i < a.length; ++i) {
+      a[i] = i;
+    }
+    MergeSort.randomize(a);
+    System.out.println(Arrays.toString(a));
+    System.out.println(Arrays.toString(MergeSort.sort(a)));
   }
 }
