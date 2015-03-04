@@ -24,7 +24,7 @@ public class MergeSort {
   public static int[] merge(int[] a1, int[] a2) {
     int[] mergedList = new int[a1.length + a2.length];
     int c1 = 0, c2 = 0;
-    while (c1 <= a1.length && c2 <= a2.length) {
+    while (c1 + c2 < a1.length + a2.length - 1) {
       if (c1 == a1.length) {
         for (; c2 < a2.length; ++c2) {
           mergedList[c1 + c2] = a2[c2];
@@ -36,7 +36,7 @@ public class MergeSort {
           mergedList[c1 + c2] = a1[c1];
         }
         return mergedList;
-      }
+        }
       if (a1[c1] < a2[c2]) {
         mergedList[c1 + c2] = a1[c1];
         c1++;
@@ -49,7 +49,7 @@ public class MergeSort {
   }
 
   public static int[] sort(int[] a) {
-    if (a.length == 1) {
+    if (a.length < 2) {
       return a;
     }
 
@@ -60,12 +60,20 @@ public class MergeSort {
   }
   
   public static void main(String[] args) {
-    int[] a = new int[99999];
+    int[] a = new int[Integer.parseInt(args[0])];
     for (int i = 0; i < a.length; ++i) {
       a[i] = i;
     }
     MergeSort.randomize(a);
-    System.out.println(Arrays.toString(a));
-    System.out.println(Arrays.toString(MergeSort.sort(a)));
+
+    if (args[1].equals("merge")) {
+      a = MergeSort.sort(a);
+    } else if (args[1].equals("arraysSort")) {
+      Arrays.sort(a);
+    } else {
+      throw new Error("invalid sort");
+    }
+
+    System.out.println("Sorted");
   }
 }
