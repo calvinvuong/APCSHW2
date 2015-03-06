@@ -1,34 +1,33 @@
 import java.util.*;
 
 public class QuickSelect {
-  
-  private static void repartition(int[] a, int s, int e) {
-    int[] partition = Arrays.copyOfRange(a, s, e);
 
+  // s and e are inclusive
+  public static void partition(int[] a, int s, int e) {
+    int[] partition = Arrays.copyOf(a, a.length);
+    
     Random rand = new Random();
-    int pivot = rand.nextInt(e - s) + s;
+    int pivotIndex = rand.nextInt(e - s + 1) + s;
 
-    System.out.println(pivot);
+    System.out.println(pivotIndex);
 
-    int[] tmp = new int[partition.length];
-    int ss = 0, ee = partition.length - 1;
-    for (int i = 0; i < partition.length; ++i) {
-      if (i == pivot) {
+    int ss = s, ee = e;
+    for (int i = s; i < e + 1; ++i) {
+      System.out.println(Arrays.toString(a) + " " + ss + " " + ee + " ");
+      if (i == pivotIndex) {
         continue;
       }
-      if (partition[i] < partition[pivot]) {
-        tmp[ss] = partition[i];
+      if (partition[i] < partition[pivotIndex]) {
+        a[ss] = partition[i];
         ss++;
-      } else {
-        tmp[ee] = partition[i];
+      } else if (partition[i] > partition[pivotIndex]) {
+        a[ee] = partition[i];
         ee--;
+      } else {
+        throw new Error("Boom");
       }
     }
-    tmp[ss] = partition[pivot];
-
-    for (int i = s; i < e; ++i) {
-      a[i] = tmp[i];
-    }
+    a[ss] = partition[pivotIndex];
   }
 
   public static int kthLowest(int[] a) {
@@ -41,7 +40,7 @@ public class QuickSelect {
       4, 2, 5, 7, 9, 3, 6, 8, 1
     };
 
-    repartition(a, 0, a.length);
+    partition(a, 0, a.length - 1);
     System.out.println(Arrays.toString(a));
   }
 }
