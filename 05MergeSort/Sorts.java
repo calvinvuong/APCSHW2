@@ -66,8 +66,6 @@ public class Sorts {
       a[i] = i;
     }
     Sorts.randomize(a);
-    System.out.println(Arrays.toString(a));
     Sorts.mergesort(a);
-    System.out.println(Arrays.toString(a));
   }
 }

@@ -2,6 +2,16 @@ import java.util.*;
 
 public class QuickSelect {
 
+  public static void randomize(int[] a) {
+    Random rand = new Random();
+    for (int i = 0; i < a.length; ++i) {
+      int randIndex = rand.nextInt(a.length - i) + i;
+      int tmp = a[i];
+      a[i] = a[randIndex];
+      a[randIndex] = tmp;
+    }
+  }
+
   // s and e are inclusive
   public static int partition(int[] a, int s, int e) {
     int[] partition = Arrays.copyOf(a, a.length);
@@ -59,11 +69,11 @@ public class QuickSelect {
   }
 
   public static void main(String[] args) {
-    int[] a = new int[] {
-      4, 3, 1, 2, 7, 9, 8, 6, 5
-    };
-
+    int[] a = new int[Integer.parseInt(args[0])];
+    for (int i = 0; i < a.length; ++i) {
+      a[i] = i;
+    }
+    randomize(a);
     quicksort(a);
-    System.out.println(Arrays.toString(a));
   }
 }
