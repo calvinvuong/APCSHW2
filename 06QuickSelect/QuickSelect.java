@@ -38,7 +38,7 @@ public class QuickSelect {
     return ss;
   }
 
-  public static int kthLowest(int[] a, int k) {
+  public static int quickselect(int[] a, int k) {
     if (k >= a.length) {
       throw new ArrayIndexOutOfBoundsException();
     }
