@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class QuickSelect {
+public class Sorts  {
 
   public static void randomize(int[] a) {
     Random rand = new Random();
@@ -20,6 +20,7 @@ public class QuickSelect {
     int pivotIndex = rand.nextInt(e - s + 1) + s;
 
     int ss = s, ee = e;
+    int dupCount = 0;
     for (int i = s; i < e + 1; ++i) {
       if (i == pivotIndex) {
         continue;
@@ -31,29 +32,52 @@ public class QuickSelect {
         a[ee] = partition[i];
         ee--;
       } else {
-        throw new Error("Boom");
+        dupCount++;
       }
     }
-    a[ss] = partition[pivotIndex];
+
+    for (int i = ss; i < ss + dupCount; ++i) {
+      a[i] = partition[pivotIndex];
+    }
+
     return ss;
   }
 
   public static int quickselect(int[] a, int k) {
-    if (k >= a.length) {
-      throw new ArrayIndexOutOfBoundsException();
-    }
+    int[] partition = Arrays.copyOf(a, a.length);
+    
+    Random rand = new Random();
+    int s = 0, e = a.length - 1;
+    int pivotIndex = rand.nextInt(e - s + 1) + s;
 
-    int[] tmp = Arrays.copyOf(a, a.length);
-
-    int testK = partition(tmp, 0, tmp.length - 1);
-    while (testK != k) {
-      if (testK > k) {
-        testK = partition(tmp, 0, testK - 1);
+    int ss = s, ee = e;
+    int dupCount = 0;
+    for (int i = s; i < e + 1; ++i) {
+      if (i == pivotIndex) {
+        continue;
+      }
+      if (partition[i] < partition[pivotIndex]) {
+        a[ss] = partition[i];
+        ss++;
+      } else if (partition[i] > partition[pivotIndex]) {
+        a[ee] = partition[i];
+        ee--;
       } else {
-        testK = partition(tmp, testK, tmp.length - 1);
+        dupCount++;
       }
     }
-    return tmp[testK];
+
+    for (int i = ss; i < ss + dupCount; ++i) {
+      a[i] = partition[pivotIndex];
+    }
+
+    if (k < ss) {
+      return quickselect(Arrays.copyOfRange(a, 0, ss + 1), k);
+    } else if (k > ee) {
+      return quickselect(Arrays.copyOfRange(a, ee, a.length), k);
+    } else {
+      return partition[pivotIndex];
+    }
   }
 
   private static void quicksortH(int[] a, int s, int e) {
@@ -73,7 +97,9 @@ public class QuickSelect {
     for (int i = 0; i < a.length; ++i) {
       a[i] = i;
     }
-    randomize(a);
-    quicksort(a);
+    int[] b = new int[] {
+      1, 1, 2, 3, 4, 4, 4, 4, 4, 4, 4
+    };
+    System.out.println(quickselect(b, 2));
   }
 }
