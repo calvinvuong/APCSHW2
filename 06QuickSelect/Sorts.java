@@ -13,79 +13,53 @@ public class Sorts  {
   }
 
   // s and e are inclusive
-  public static int partition(int[] a, int s, int e) {
-    int[] partition = Arrays.copyOf(a, a.length);
-    
+  private static int partition(int[] a, int s, int e) {
     Random rand = new Random();
     int pivotIndex = rand.nextInt(e - s + 1) + s;
 
-    int ss = s, ee = e;
-    int dupCount = 0;
-    for (int i = s; i < e + 1; ++i) {
-      if (i == pivotIndex) {
-        continue;
-      }
-      if (partition[i] < partition[pivotIndex]) {
-        a[ss] = partition[i];
-        ss++;
-      } else if (partition[i] > partition[pivotIndex]) {
-        a[ee] = partition[i];
-        ee--;
-      } else {
-        dupCount++;
+    int tmp = a[e];
+    a[e] = a[pivotIndex];
+    a[pivotIndex] = tmp;
+
+    for (int i = s; i < e; ++i) {
+      if (a[i] < a[e]) {
+        tmp = a[s];
+        a[s] = a[i];
+        a[i] = tmp;
+        s++;
       }
     }
 
-    for (int i = ss; i < ss + dupCount; ++i) {
-      a[i] = partition[pivotIndex];
-    }
-
-    return ss;
+    tmp = a[e];
+    a[e] = a[s];
+    a[s] = tmp;
+    return s;
   }
 
+  // Returns the kth smallest integer in array a
   public static int quickselect(int[] a, int k) {
-    int[] partition = Arrays.copyOf(a, a.length);
-    
-    Random rand = new Random();
-    int s = 0, e = a.length - 1;
-    int pivotIndex = rand.nextInt(e - s + 1) + s;
+    return quickselect(a, 0, a.length - 1, k - 1);
+  }
 
-    int ss = s, ee = e;
-    int dupCount = 0;
-    for (int i = s; i < e + 1; ++i) {
-      if (i == pivotIndex) {
-        continue;
-      }
-      if (partition[i] < partition[pivotIndex]) {
-        a[ss] = partition[i];
-        ss++;
-      } else if (partition[i] > partition[pivotIndex]) {
-        a[ee] = partition[i];
-        ee--;
-      } else {
-        dupCount++;
-      }
-    }
+  private static int quickselect(int[] a, int s, int e, int k) {
+    int testPivot = partition(a, s, e);
 
-    for (int i = ss; i < ss + dupCount; ++i) {
-      a[i] = partition[pivotIndex];
-    }
-
-    if (k < ss) {
-      return quickselect(Arrays.copyOfRange(a, 0, ss + 1), k);
-    } else if (k > ee) {
-      return quickselect(Arrays.copyOfRange(a, ee, a.length), k);
+    if (k < testPivot) {
+      return quickselect(a, s, testPivot - 1, k);
+    } else if (k > testPivot) {
+      return quickselect(a, testPivot + 1, e, k);
     } else {
-      return partition[pivotIndex];
+      return a[testPivot];
     }
   }
 
   private static void quicksortH(int[] a, int s, int e) {
-    if (s < e) {
-      int pivot = partition(a, s, e);
-      quicksortH(a, s, pivot - 1);
-      quicksortH(a, pivot + 1, e);
+    if (s >= e) {
+      return;
     }
+    int pivot = partition(a, s, e);
+    quicksortH(a, s, pivot - 1);
+    quicksortH(a, pivot + 1, e);
   }
 
   public static void quicksort(int[] a) {
@@ -98,8 +72,11 @@ public class Sorts  {
       a[i] = i;
     }
     int[] b = new int[] {
-      1, 1, 2, 3, 4, 4, 4, 4, 4, 4, 4
+      1, 4, 7, 4, 2, 4, 5, 7
     };
-    System.out.println(quickselect(b, 2));
+    System.out.println(Arrays.toString(b));
+    System.out.println(quickselect(b, 4));
+    quicksort(a);
+    System.out.println(Arrays.toString(a));
   }
 }
