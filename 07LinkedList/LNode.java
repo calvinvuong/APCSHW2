@@ -4,7 +4,12 @@ public class LNode {
   private LNode next_;
 
   public LNode(int value) {
+    this(value, null);
+  }
+
+  public LNode(int value, LNode next) {
     value_ = value;
+    next_ = next;
   }
 
   public String toString() {
