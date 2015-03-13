@@ -115,18 +115,6 @@ public class MyLinkedList<T> {
     head_ = null;
   }
 
-  public T[] toArray() {
-    T[] array = new T[size_];
-    int counter = 0;
-    LNode<T> current = head_;
-    while (current != null) {
-      T[counter] = current.getData();
-      current = current.getNext();
-      counter++;
-    }
-    return array;
-  }
-
   public String toString() {
     if (size_ == 0) {
       return "[ ]";
