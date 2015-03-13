@@ -1,102 +1,103 @@
 import java.util.*;
 
-public class MyLinkedList {
+public class MyLinkedList<T> {
   
   private int size_;
-  private LNode head_;
+  private LNode<T> head_;
 
   public MyLinkedList() {
     size_ = 0;
   }
 
-  public int get(int index) {
+  public T get(int index) {
     if (index < 0 || index >= size_) {
       throw new ArrayIndexOutOfBoundsException();
     }
-    LNode current = head_;
+    LNode<T> current = head_;
     while (index != 0) {
       current = current.getNext();
       index--;
     }
-    return current.getValue();
+    return current.getData();
   }
 
-  public void set(int index, int value) {
+  public void set(int index, T data) {
     if (index < 0 || index >= size_) {
       throw new ArrayIndexOutOfBoundsException();
     }
-    LNode current = head_;
+    LNode<T> current = head_;
     while (index != 0) {
       current = current.getNext();
       index--;
     }
-    current.setValue(value);
+    current.setData(data);
   }
 
-  public int remove(int index) {
+  public T remove(int index) {
     if (index < 0 || index >= size_) {
       throw new ArrayIndexOutOfBoundsException();
     }
-    int toReturn;
+    T toReturn;
     if (index == 0) {
-      toReturn = head_.getValue();
+      toReturn = head_.getData();
       head_ = head_.getNext();
     } else {
-      LNode current = head_;
+      LNode<T> current = head_;
       while (index != 1) {
         current = current.getNext();
         index--;
       }
-      toReturn = current.getNext().getValue();
+      toReturn = current.getNext().getData();
       current.setNext(current.getNext().getNext());
     }
     size_--;
     return toReturn;
   }
 
-  public void add(int value) {
+  public boolean add(T data) {
     if (size_ == 0) {
-      head_ = new LNode(value);
+      head_ = new LNode<T>(data);
     } else {
-      LNode current = head_;
+      LNode<T> current = head_;
       while (current.getNext() != null) {
         current = current.getNext();
       }
-      current.setNext(new LNode(value));
+      current.setNext(new LNode<T>(data));
     }
     size_++;
+    return true;
   }
 
-  public void add(int index, int value) {
+  public void add(int index, T data) {
     if (index < 0 || index > size_) {
       throw new ArrayIndexOutOfBoundsException();
     }
     if (index == size_) {
-      add(value);
+      add(data);
       return;
     }
-    LNode current = head_;
+    LNode<T> current = head_;
     while (index != 0) {
       current = current.getNext();
       index--;
     }
-    int tmp = current.getValue();
-    current.setValue(value);
-    current.setNext(new LNode(tmp, current.getNext()));
+    T tmp = current.getData();
+    current.setData(data);
+    current.setNext(new LNode<T>(tmp, current.getNext()));
     size_++;
   }
 
   public void swap(int index1, int index2) {
-    int tmp = get(index1);
+    T tmp = get(index1);
     set(index1, get(index2));
     set(index2, tmp);
   }
 
-  public int indexOf(int value) {
-    LNode current = head_;
+  public int indexOf(T value) {
+    LNode<T> current = head_;
     int counter = 0;
     while (current != null) {
-      if (current.getValue() == value) {
+      if (current.getData().equals(value)) {
         return counter;
       }
       current = current.getNext();
@@ -114,39 +115,36 @@ public class MyLinkedList {
     head_ = null;
   }
 
+  public T[] toArray() {
+    T[] array = new T[size_];
+    int counter = 0;
+    LNode<T> current = head_;
+    while (current != null) {
+      T[counter] = current.getData();
+      current = current.getNext();
+      counter++;
+    }
+    return array;
+  }
+
   public String toString() {
     if (size_ == 0) {
       return "[ ]";
     }
     String out = "[";
-    LNode current = head_;
+    LNode<T> current = head_;
     while (current.getNext() != null) {
       out += current.toString() + ", ";
       current = current.getNext();
     }
     out += current.toString();
-    return out + "] " + size_;
+    return out + "]";
   }
 
   public static void main(String[] args) {
-    MyLinkedList l = new MyLinkedList();
-    l.add(3);
-    l.add(4);
-    l.add(56);
-    l.add(565);
-    l.add(536);
-    System.out.println(l.size());
+    MyLinkedList<Integer> l = new MyLinkedList<Integer>();
+    l.add(5);
+    l.add(6);
     System.out.println(l);
-    for (int i = 0; i < l.size(); ++i) {
-      System.out.println(l.get(i));
-    }
-    l.set(0, 100);
-    l.set(4, 200);
-    System.out.println(l);
-    l.remove(3);
-    System.out.println(l);
-    l.add(4, 999);
-    System.out.println(l);
-    System.out.println(l.indexOf(999));
   }
 }

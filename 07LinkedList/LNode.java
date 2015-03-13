@@ -1,34 +1,34 @@
-public class LNode {
+public class LNode<T> {
 
-  private int value_;
-  private LNode next_;
+  private T data_;
+  private LNode<T> next_;
 
-  public LNode(int value) {
-    this(value, null);
+  public LNode(T data) {
+    this(data, null);
   }
 
-  public LNode(int value, LNode next) {
-    value_ = value;
+  public LNode(T data, LNode<T> next) {
+    data_ = data;
     next_ = next;
   }
 
   public String toString() {
-    return "" + value_;
+    return data_.toString();
   }
 
-  public LNode getNext() {
+  public LNode<T> getNext() {
     return next_;
   }
 
-  public void setNext(LNode next) {
+  public void setNext(LNode<T> next) {
     next_ = next;
   }
 
-  public int getValue() {
-    return value_;
+  public T getData() {
+    return data_;
   }
 
-  public void setValue(int value) {
-    value_ = value;
+  public void setData(T data) {
+    data_ = data;
   }
 }
