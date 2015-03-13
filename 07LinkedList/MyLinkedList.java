@@ -4,67 +4,14 @@ public class MyLinkedList<T> {
   
   private int size_;
   private LNode<T> head_;
+  private LNode<T> tail_;
 
   public MyLinkedList() {
     size_ = 0;
   }
 
-  public T get(int index) {
-    if (index < 0 || index >= size_) {
-      throw new ArrayIndexOutOfBoundsException();
-    }
-    LNode<T> current = head_;
-    while (index != 0) {
-      current = current.getNext();
-      index--;
-    }
-    return current.getData();
-  }
-
-  public void set(int index, T data) {
-    if (index < 0 || index >= size_) {
-      throw new ArrayIndexOutOfBoundsException();
-    }
-    LNode<T> current = head_;
-    while (index != 0) {
-      current = current.getNext();
-      index--;
-    }
-    current.setData(data);
-  }
-
-  public T remove(int index) {
-    if (index < 0 || index >= size_) {
-      throw new ArrayIndexOutOfBoundsException();
-    }
-    T toReturn;
-    if (index == 0) {
-      toReturn = head_.getData();
-      head_ = head_.getNext();
-    } else {
-      LNode<T> current = head_;
-      while (index != 1) {
-        current = current.getNext();
-        index--;
-      }
-      toReturn = current.getNext().getData();
-      current.setNext(current.getNext().getNext());
-    }
-    size_--;
-    return toReturn;
-  }
-
   public boolean add(T data) {
-    if (size_ == 0) {
-      head_ = new LNode<T>(data);
-    } else {
-      LNode<T> current = head_;
-      while (current.getNext() != null) {
-        current = current.getNext();
-      }
-      current.setNext(new LNode<T>(data));
-    }
-    size_++;
+    addLast(data);
     return true;
   }
 
@@ -73,7 +20,7 @@ public class MyLinkedList<T> {
       throw new ArrayIndexOutOfBoundsException();
     }
     if (index == size_) {
-      add(data);
+      addLast(data);
       return;
     }
     LNode<T> current = head_;
@@ -87,10 +34,37 @@ public class MyLinkedList<T> {
     size_++;
   }
 
-  public void swap(int index1, int index2) {
-    T tmp = get(index1);
-    set(index1, get(index2));
-    set(index2, tmp);
+  public void addFirst(T data) {
+    add(0, data);
+  }
+
+  public void addLast(T data) {
+    if (size_ == 0) {
+      head_ = new LNode<T>(data);
+      tail_ = head_;
+    } else {
+      LNode<T> newTail = new LNode<T>(data);
+      tail_.setNext(newTail);
+      tail_ = tail_.getNext();
+    }
+    size_++;
+  }
+
+  public void clear() {
+    size_ = 0;
+    head_ = null;
+  }
+
+  public T get(int index) {
+    if (index < 0 || index >= size_) {
+      throw new ArrayIndexOutOfBoundsException();
+    }
+    LNode<T> current = head_;
+    while (index != 0) {
+      current = current.getNext();
+      index--;
+    }
+    return current.getData();
   }
 
   public int indexOf(T value) {
@@ -106,13 +80,70 @@ public class MyLinkedList<T> {
     return -1;
   }
 
+  public T peek() {
+    return head_.getData();
+  }
+
+  public T poll() {
+    if (size_ == 0) {
+      return null;
+    }
+    return remove(0);
+  }
+
+  public T remove() {
+    return remove(0);
+  }
+
+  public T remove(int index) {
+    if (index < 0 || index >= size_) {
+      throw new ArrayIndexOutOfBoundsException();
+    }
+    T toReturn;
+    if (index == 0) {
+      toReturn = head_.getData();
+      head_ = head_.getNext();
+    } else if (index == size_ - 1) {
+      toReturn = tail_.getData();
+      tail_ = null;
+      LNode<T> current = head_;
+      while (current.getNext() != null) {
+        current = current.getNext();
+      }
+      tail_ = current;
+    } else {
+      LNode<T> current = head_;
+      while (index != 1) {
+        current = current.getNext();
+        index--;
+      }
+      toReturn = current.getNext().getData();
+      current.setNext(current.getNext().getNext());
+    }
+    size_--;
+    return toReturn;
+  }
+
+  public void set(int index, T data) {
+    if (index < 0 || index >= size_) {
+      throw new ArrayIndexOutOfBoundsException();
+    }
+    LNode<T> current = head_;
+    while (index != 0) {
+      current = current.getNext();
+      index--;
+    }
+    current.setData(data);
+  }
+
   public int size() {
     return size_;
   }
 
-  public void clear() {
-    size_ = 0;
-    head_ = null;
+  public void swap(int index1, int index2) {
+    T tmp = get(index1);
+    set(index1, get(index2));
+    set(index2, tmp);
   }
 
   public String toString() {
@@ -133,6 +164,11 @@ public class MyLinkedList<T> {
     MyLinkedList<Integer> l = new MyLinkedList<Integer>();
     l.add(5);
     l.add(6);
+    l.addLast(10);
+    l.addFirst(2);
+    System.out.println(l.indexOf(10));
+    System.out.println(l);
+    l.remove(2);
     System.out.println(l);
   }
 }
