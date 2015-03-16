@@ -3,7 +3,7 @@ import java.util.*;
 public class Sorts  {
 
   public String name() {
-    return "Lin,Alvin";
+    return "lin.alvin";
   }
 
   public static void randomize(int[] a) {

@@ -11,7 +11,7 @@ public class MyLinkedList<T> {
   }
 
   public String name() {
-    return "lin.alvin";
+    return "Lin,Alvin";
   }
 
   public boolean add(T data) {
