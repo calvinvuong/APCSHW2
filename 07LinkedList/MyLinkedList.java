@@ -10,6 +10,10 @@ public class MyLinkedList<T> {
     size_ = 0;
   }
 
+  public String name() {
+    return "Lin,Alvin";
+  }
+
   public boolean add(T data) {
     addLast(data);
     return true;
