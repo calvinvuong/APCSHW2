@@ -24,13 +24,8 @@ public class Sorts {
     return Math.abs((n / (int) Math.pow(10, (double) place - 1)) % 10);
   }
 
-  private static int getDigitsIn(int n) {
-    int digits = 0;
-    while (Math.abs(n) > 0) {
-      n /= 10;
-      digits++;
-    }
-    return digits;
+  public static int getDigitsIn(int n) {
+    return (n + "").length();
   }
 
   public static void radix(int[] c) {
@@ -93,7 +88,7 @@ public class Sorts {
     quicksortH(a, pivot + 1, e);
   }
 
-  public static void quicksort(int[] a) {
+  public static void quick(int[] a) {
     quicksortH(a, 0, a.length - 1);
   }
 
@@ -132,7 +127,7 @@ public class Sorts {
     int[] sub1 = Arrays.copyOfRange(a, 0, a.length / 2);
     int[] sub2 = Arrays.copyOfRange(a, a.length / 2, a.length);
 
-    return merge(sort(sub1), sort(sub2));
+    return merge(mergesortH(sub1), mergesortH(sub2));
   }
 
   public static void merge(int[] a) {
@@ -143,5 +138,13 @@ public class Sorts {
   }
 
   public static void main(String[] args) {
+    int[] a = new int[10000];
+    for (int i = 0; i < a.length; ++i) {
+      a[i] = i;
+    }
+    randomize(a);
+    System.out.println(Arrays.toString(a));
+    merge(a);
+    System.out.println(Arrays.toString(a));
   }
 }
