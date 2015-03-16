@@ -2,6 +2,10 @@ import java.util.*;
 
 public class Sorts  {
 
+  public String name() {
+    return "Lin,Alvin";
+  }
+
   public static void randomize(int[] a) {
     Random rand = new Random();
     for (int i = 0; i < a.length; ++i) {
