@@ -166,13 +166,20 @@ public class MyLinkedList<T> {
 
   public static void main(String[] args) {
     MyLinkedList<Integer> l = new MyLinkedList<Integer>();
-    l.add(5);
-    l.add(6);
-    l.addLast(10);
-    l.addFirst(2);
-    System.out.println(l.indexOf(10));
-    System.out.println(l);
-    l.remove(2);
-    System.out.println(l);
+    ArrayList<Integer> m = new ArrayList<Integer>();
+
+    for (int i = 0; i < 100; ++i) {
+      l.add(i);
+      m.add(i);
+    }
+
+    l.remove(23);
+    m.remove(23);
+
+    l.set(4, 30);
+    m.set(4, 30);
+
+    System.out.println(l + " " + l.size());
+    System.out.println(m + " " + m.size());
   }
 }
