@@ -1,6 +1,62 @@
 import java.util.*;
 
-public class MyLinkedList<T> {
+public class MyLinkedList<T> implements Iterable<T> {
+
+  private class LNode<T> {
+    private T data_;
+    private LNode<T> next_;
+
+    public LNode(T data) {
+      this(data, null);
+    }
+
+    public LNode(T data, LNode<T> next) {
+      data_ = data;
+      next_ = next;
+    }
+
+    public String toString() {
+      return data_.toString();
+    }
+
+    public LNode<T> getNext() {
+      return next_;
+    }
+
+    public void setNext(LNode<T> next) {
+      next_ = next;
+    }
+
+    public T getData() {
+      return data_;
+    }
+
+    public void setData(T data) {
+      data_ = data;
+    }
+  }
+
+  private class MyLinkedListIterator<T> implements Iterator<T> {
+    private LNode<T> current_;
+
+    public MyLinkedListIterator(LNode<T> current) {
+      current_ = current;
+    }
+
+    public boolean hasNext() {
+      return current_.getNext() != null;
+    }
+
+    public T next() {
+      T data =  current_.getData();
+      current_ = current_.getNext();
+      return data;
+    }
+
+    public void remove() {
+      throw new UnsupportedOperationException();
+    }
+  }
   
   private int size_;
   private LNode<T> head_;
@@ -82,6 +138,10 @@ public class MyLinkedList<T> {
       counter++;
     }
     return -1;
+  }
+
+  public Iterator<T> iterator() {
+    return new MyLinkedListIterator<T>(head_);
   }
 
   public T peek() {
@@ -181,5 +241,9 @@ public class MyLinkedList<T> {
 
     System.out.println(l + " " + l.size());
     System.out.println(m + " " + m.size());
+
+    for (int i : l) {
+      System.out.print(i);
+    }
   }
 }
