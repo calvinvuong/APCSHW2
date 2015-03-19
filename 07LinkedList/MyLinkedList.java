@@ -169,12 +169,10 @@ public class MyLinkedList<T> implements Iterable<T> {
       head_ = head_.getNext();
     } else if (index == size_ - 1) {
       toReturn = tail_.getData();
-      tail_ = null;
-      LNode<T> current = head_;
-      while (current.getNext() != null) {
-        current = current.getNext();
+      tail_ = head;
+      while (tail_.getNext() != null) {
+        tail_ = tail_.getNext();
       }
-      tail_ = current;
     } else {
       LNode<T> current = head_;
       while (index != 1) {
