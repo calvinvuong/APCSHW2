@@ -44,13 +44,17 @@ public class MyLinkedList<T> implements Iterable<T> {
     }
 
     public boolean hasNext() {
-      return current_.getNext() != null;
+      return current_ != null;
     }
 
     public T next() {
-      T data =  current_.getData();
-      current_ = current_.getNext();
-      return data;
+      if (hasNext()) {
+        T data =  current_.getData();
+        current_ = current_.getNext();
+        return data;
+      } else {
+        throw new NoSuchElementException();
+      }
     }
 
     public void remove() {
