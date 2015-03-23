@@ -11,21 +11,21 @@ public class MyStack<T> {
     if (t == null) {
       throw new NullPointerException();
     }
-    linkedList_.add(t);
+    linkedList_.add(0, t);
   }
 
   public T peek() {
     if (linkedList_.size() == 0) {
       throw new NoSuchElementException();
     }
-    return linkedList_.get(size() - 1);
+    return linkedList_.get(0);
   }
 
   public T pop() {
     if (linkedList_.size() == 0) {
       throw new NoSuchElementException();
     }
-    return linkedList_.remove(linkedList_.size() - 1);
+    return linkedList_.remove(0);
   }
 
   public int size() {
@@ -50,7 +50,9 @@ public class MyStack<T> {
     for (int i = 0; i < 10; ++i) {
       a.add(i);
     }
-    System.out.println(a.remove(a.size() - 1));
-    System.out.println(a);
+    while (a.size() != 0) {
+      System.out.println(a.remove(a.size() - 1));
+      System.out.println(a);
+    }
   }
 }
