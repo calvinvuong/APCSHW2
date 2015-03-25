@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class Deque<T> {
+public class MyDeque<T> {
 
   private final int DEFAULT_SIZE = 10;
 
@@ -9,7 +9,7 @@ public class Deque<T> {
   private int tail_;
   private int size_;
 
-  public Deque() {
+  public MyDeque() {
     items_ = (T[]) (new Object[DEFAULT_SIZE]);
     head_ = 0;
     tail_ = DEFAULT_SIZE - 1;
@@ -72,16 +72,16 @@ public class Deque<T> {
     size_++;
   }
 
-  public T peekFirst() {
+  public T getFirst() {
     if (size_ == 0) {
-      return null;
+      throw new NoSuchElementException();
     }
     return items_[head_];
   }
 
-  public T peekLast() {
+  public T getLast() {
     if (size_ == 0) {
-      return null;
+      throw new NoSuchElementException();
     }
     return items_[tail_];
   }
@@ -131,7 +131,7 @@ public class Deque<T> {
   }
 
   public static void main(String[] args) {
-    Deque<Integer> q = new Deque<Integer>();
+    MyDeque<Integer> q = new MyDeque<Integer>();
     q.add(1);
     System.out.println(q + " " + q.size());
     q.add(2);
@@ -145,7 +145,7 @@ public class Deque<T> {
     System.out.println(q.removeFirst() + " " + q);
     System.out.println(q.removeFirst() + " " + q);
     System.out.println(q.removeLast() + " " + q);
-    System.out.println(q.peekFirst() + " " + q);
-    System.out.println(q.peekLast() + " " + q);
+    System.out.println(q.getFirst() + " " + q);
+    System.out.println(q.getLast() + " " + q);
   }
 }
