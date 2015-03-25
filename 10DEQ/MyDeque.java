@@ -9,6 +9,7 @@ public class MyDeque<T> {
   private int tail_;
   private int size_;
 
+  @SuppressWarnings("unchecked")
   public MyDeque() {
     items_ = (T[]) (new Object[DEFAULT_SIZE]);
     head_ = 0;
@@ -23,6 +24,7 @@ public class MyDeque<T> {
     return n % items_.length;
   }
 
+  @SuppressWarnings("unchecked")
   private void resize() {
     int newSize = size_;
     if (size_ == items_.length) {
