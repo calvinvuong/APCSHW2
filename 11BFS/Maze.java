@@ -1,7 +1,7 @@
 import java.util.*;
 import java.io.*;
 
-public class BFS {
+public class Maze {
   
   private class MoveNode {
     public int x_;
@@ -19,13 +19,21 @@ public class BFS {
     }
   }
 
+  private static final String CLEAR = "\033[2J";
+  private static final String HIDE = "\033[?25l";
+  private static final String SHOW = "\033[?25h";
+  private static final String RESET = "\033[0;0H";
+
+  private String filename_;
   private char[][] maze_;
   private int[] startPoint_;
+  private LinkedList<Integer> solution_;
 
-  public BFS(String filename) {
+  public Maze(String filename) {
+    filename_ = filename;
     getMaze(filename);
-    startPoint_ = new int[2];
     verifyMaze();
+    solution_ = new LinkedList<Integer>();
   }
 
   /**
@@ -71,21 +79,30 @@ public class BFS {
     }
   }
 
-  private void outputMaze(boolean animate) {
+  public String toString() {
+    String out = "";
+    for (char[] i : maze_) {
+      for (char j : i) {
+        out += j;
+      }
+      out += "\n";
+    }
+    return out;
+  }
+
+  public String toString(boolean animate) {
     if (animate) {
       try {
-        Thread.sleep(10);
-        for (int i = 0; i < 50; ++i) {
-          System.out.print("\n");
-        }
-      } catch (Exception e) {}
-    }
-    for (int i = 0; i < maze_.length; ++i) {
-      for (int j = 0; j < maze_[i].length; ++j) {
-        System.out.print(maze_[i][j]);
+        Thread.sleep(100);
       }
-      System.out.print("\n");
+      catch (Exception e) {}
+      return CLEAR + RESET + toString();
     }
+    return toString();
+  }
+  
+  private void outputMaze(boolean animate) {
+    System.out.println(toString(animate));
   }
 
   private void verifyMaze() {
@@ -95,8 +112,7 @@ public class BFS {
       for (int j = 0; j < maze_[i].length; ++j) {
         if (maze_[i][j] == 'S') {
           s++;
-          startPoint_[0] = i;
-          startPoint_[1] = j;
+          startPoint_ = new int[] { i, j };
         }
         if (maze_[i][j] == 'E') {
           e++;
@@ -120,11 +136,11 @@ public class BFS {
     }
   }
 
-  public void breadthSolve() {
+  public boolean solveBFS(boolean animate) {
     MyDeque<MoveNode> moves = new MyDeque<MoveNode>();
     moves.add(new MoveNode(startPoint_[0], startPoint_[1], null));
 
-    while (true) {
+    while (moves.size() != 0) {
       int numCurrentMoves = moves.size();
       for (int d = 0; d < numCurrentMoves; ++d) {
         MoveNode first = moves.removeFirst();
@@ -134,28 +150,87 @@ public class BFS {
           new int[] { first.x_, first.y_ + 1 },
           new int[] { first.x_, first.y_ - 1}
         };
-        for (int i = 0; i < candidates.length; ++i) {
-          if (maze_[candidates[i][0]][candidates[i][1]] == 'E') {
+        for (int[] candidate : candidates) {
+          if (maze_[candidate[0]][candidate[1]] == 'E') {
             while (first.prev_ != null) {
               maze_[first.x_][first.y_] = '@';
+              solution_.addFirst(first.x_);
+              solution_.add(1, first.y_);
               first = first.prev_;
             }
             clearCrapFromMaze();
-            outputMaze(true);
-            return;
+            outputMaze(animate);
+            return true;
           }
-          if (verifySquare(candidates[i])) {
-            maze_[candidates[i][0]][candidates[i][1]] = '.';
-            moves.add(new MoveNode(candidates[i], first));
+          if (verifySquare(candidate)) {
+            maze_[candidate[0]][candidate[1]] = '.';
+            moves.add(new MoveNode(candidate, first));
           }
-          outputMaze(true);
         }
+        outputMaze(animate);
       }
     }
+    return false;
+  }
+
+  public boolean solveBFS() {
+    return solveBFS(false);
+  }
+
+  public boolean solveDFS(boolean animate) {
+    MyDeque<MoveNode> moves = new MyDeque<MoveNode>();
+    moves.add(new MoveNode(startPoint_[0], startPoint_[1], null));
+    
+    while (moves.size() != 0) {
+      int numCurrentMoves = moves.size();
+      for (int d = 0; d < numCurrentMoves; ++d) {
+        MoveNode first = moves.removeLast();
+        int[][] candidates = new int[][] {
+          new int[] { first.x_ + 1, first.y_ },
+          new int[] { first.x_ - 1, first.y_ },
+          new int[] { first.x_, first.y_ + 1 },
+          new int[] { first.x_, first.y_ - 1}
+        };
+        for (int[] candidate : candidates) {
+          if (maze_[candidate[0]][candidate[1]] == 'E') {
+            while (first.prev_ != null) {
+              maze_[first.x_][first.y_] = '@';
+              solution_.addFirst(first.x_);
+              solution_.add(1, first.y_);
+              first = first.prev_;
+            }
+            clearCrapFromMaze();
+            outputMaze(animate);
+            return true;
+          }
+          if (verifySquare(candidate)) {
+            maze_[candidate[0]][candidate[1]] = '.';
+            moves.add(new MoveNode(candidate, first));
+          }
+        }
+        outputMaze(animate);
+      }
+    }
+    return false;
+  }
+
+  public boolean solveDFS() {
+    return solveDFS(false);
+  }
+
+  public int[] solutionCoordinates() {
+    int[] out = new int[solution_.size()];
+    int c = 0;
+    for (int i : solution_) {
+      out[c] = i;
+      c++;
+    }
+    return out;
   }
 
   public static void main(String[] args) {
-    BFS m = new BFS(args[0]);
-    m.breadthSolve();
+    Maze m = new Maze(args[0]);
+    m.solveDFS(true);
+    System.out.println(Arrays.toString(m.solutionCoordinates()));
   }
 }
