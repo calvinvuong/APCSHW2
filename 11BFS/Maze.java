@@ -23,6 +23,8 @@ public class Maze {
   private static final String HIDE = "\033[?25l";
   private static final String SHOW = "\033[?25h";
   private static final String RESET = "\033[0;0H";
+  private static final int BREADTH_FIRST_MODE = 0;
+  private static final int DEPTH_FIRST_MODE = 1;
 
   private String filename_;
   private char[][] maze_;
@@ -136,14 +138,21 @@ public class Maze {
     }
   }
 
-  public boolean solveBFS(boolean animate) {
+  private boolean solve(boolean animate, int mode) {
     MyDeque<MoveNode> moves = new MyDeque<MoveNode>();
     moves.add(new MoveNode(startPoint_[0], startPoint_[1], null));
 
     while (moves.size() != 0) {
       int numCurrentMoves = moves.size();
       for (int d = 0; d < numCurrentMoves; ++d) {
-        MoveNode first = moves.removeFirst();
+        MoveNode first;
+        if (mode == BREADTH_FIRST_MODE) {
+          first = moves.removeFirst();
+        } else if (mode == DEPTH_FIRST_MODE) {
+          first = moves.removeLast();
+        } else {
+          throw new Error("Invalid mode");
+        }
         int[][] candidates = new int[][] {
           new int[] { first.x_ + 1, first.y_ },
           new int[] { first.x_ - 1, first.y_ },
@@ -171,6 +180,11 @@ public class Maze {
       }
     }
     return false;
+  }
+    
+
+  public boolean solveBFS(boolean animate) {
+    return solve(animate, BREADTH_FIRST_MODE);
   }
 
   public boolean solveBFS() {
@@ -178,40 +192,7 @@ public class Maze {
   }
 
   public boolean solveDFS(boolean animate) {
-    MyDeque<MoveNode> moves = new MyDeque<MoveNode>();
-    moves.add(new MoveNode(startPoint_[0], startPoint_[1], null));
-    
-    while (moves.size() != 0) {
-      int numCurrentMoves = moves.size();
-      for (int d = 0; d < numCurrentMoves; ++d) {
-        MoveNode first = moves.removeLast();
-        int[][] candidates = new int[][] {
-          new int[] { first.x_ + 1, first.y_ },
-          new int[] { first.x_ - 1, first.y_ },
-          new int[] { first.x_, first.y_ + 1 },
-          new int[] { first.x_, first.y_ - 1}
-        };
-        for (int[] candidate : candidates) {
-          if (maze_[candidate[0]][candidate[1]] == 'E') {
-            while (first.prev_ != null) {
-              maze_[first.x_][first.y_] = '@';
-              solution_.addFirst(first.x_);
-              solution_.add(1, first.y_);
-              first = first.prev_;
-            }
-            clearCrapFromMaze();
-            outputMaze(animate);
-            return true;
-          }
-          if (verifySquare(candidate)) {
-            maze_[candidate[0]][candidate[1]] = '.';
-            moves.add(new MoveNode(candidate, first));
-          }
-        }
-        outputMaze(animate);
-      }
-    }
-    return false;
+    return solve(animate, DEPTH_FIRST_MODE);
   }
 
   public boolean solveDFS() {
@@ -230,7 +211,7 @@ public class Maze {
 
   public static void main(String[] args) {
     Maze m = new Maze(args[0]);
-    m.solveBFS(true);
+    m.solveDFS(true);
     System.out.println(Arrays.toString(m.solutionCoordinates()));
   }
 }
