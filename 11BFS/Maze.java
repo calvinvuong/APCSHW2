@@ -160,21 +160,23 @@ public class Maze {
           new int[] { first.x_, first.y_ - 1}
         };
         for (int[] candidate : candidates) {
-          if (maze_[candidate[0]][candidate[1]] == 'E') {
-            while (first.prev_ != null) {
-              maze_[first.x_][first.y_] = '@';
-              solution_.addFirst(first.x_);
-              solution_.add(1, first.y_);
-              first = first.prev_;
+          try {
+            if (maze_[candidate[0]][candidate[1]] == 'E') {
+              while (first.prev_ != null) {
+                maze_[first.x_][first.y_] = '@';
+                solution_.addFirst(first.x_);
+                solution_.add(1, first.y_);
+                first = first.prev_;
+              }
+              clearCrapFromMaze();
+              outputMaze(animate);
+              return true;
             }
-            clearCrapFromMaze();
-            outputMaze(animate);
-            return true;
-          }
-          if (verifySquare(candidate)) {
-            maze_[candidate[0]][candidate[1]] = '.';
-            moves.add(new MoveNode(candidate, first));
-          }
+            if (verifySquare(candidate)) {
+              maze_[candidate[0]][candidate[1]] = '.';
+              moves.add(new MoveNode(candidate, first));
+            }
+          } catch (ArrayIndexOutOfBoundsException e) {}
         }
         outputMaze(animate);
       }
