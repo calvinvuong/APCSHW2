@@ -132,7 +132,7 @@ public class Maze {
 
   private boolean verifySquare(int x, int y) {
     try {
-      return maze_[x][y] != 'X' && maze_[x][y] != '.' && maze_[x][y] != 'S';
+      return maze_[x][y] != '#' && maze_[x][y] != '.' && maze_[x][y] != 'S';
     } catch (ArrayIndexOutOfBoundsException e) {
       return false;
     }
@@ -211,7 +211,7 @@ public class Maze {
 
   public static void main(String[] args) {
     Maze m = new Maze(args[0]);
-    m.solveDFS(true);
+    m.solveBFS(true);
     System.out.println(Arrays.toString(m.solutionCoordinates()));
   }
 }
