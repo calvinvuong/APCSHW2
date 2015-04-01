@@ -230,7 +230,7 @@ public class Maze {
 
   public static void main(String[] args) {
     Maze m = new Maze(args[0]);
-    m.solveDFS(true);
+    m.solveBFS(true);
     System.out.println(Arrays.toString(m.solutionCoordinates()));
   }
 }
