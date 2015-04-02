@@ -216,7 +216,7 @@ public class Maze {
       throw new Error("Usage: java Maze <bfs|dfs> <maze>");
     }
     Maze m = new Maze(args[1]);
-    if (args[1].equals("bfs")) {
+    if (args[0].equals("bfs")) {
       m.solveBFS(true);
     } else if (args[0].equals("dfs")) {
       m.solveDFS(true);
