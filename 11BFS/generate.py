@@ -56,9 +56,9 @@ def generate(filename, w, h):
     for c in range(1, h, 2):
       grid[r][c] = 'x'
 
-  # Iterative passes until nodes can no longer be cut from
-  for r in range(1, w, 2):
-    for c in range(1, h, 2):
+  # Iterative passes
+  for r in range(1, w, 2)[::-1]:
+    for c in range(1, h, 2)[::-1]:
       grid = cutFrom(grid, r, c)
 
   # Add the start and end
@@ -68,7 +68,7 @@ def generate(filename, w, h):
   filename.write(toString(grid))
 
   print toString(grid)
-  print "written to " + str(filename)
+  print "written to " + filename.name
 
 def main():
   parser = argparse.ArgumentParser(description='This script generates a maze')

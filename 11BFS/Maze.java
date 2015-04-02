@@ -178,8 +178,8 @@ public class Maze {
             }
           } catch (ArrayIndexOutOfBoundsException e) {}
         }
-        outputMaze(animate);
       }
+      outputMaze(animate);
     }
     return false;
   }
@@ -212,8 +212,17 @@ public class Maze {
   }
 
   public static void main(String[] args) {
-    Maze m = new Maze(args[0]);
-    m.solveBFS(true);
+    if (args.length != 2) {
+      throw new Error("Usage: java Maze <bfs|dfs> <maze>");
+    }
+    Maze m = new Maze(args[1]);
+    if (args[1].equals("bfs")) {
+      m.solveBFS(true);
+    } else if (args[0].equals("dfs")) {
+      m.solveDFS(true);
+    } else {
+      throw new Error("Invalid method");
+    }
     System.out.println(Arrays.toString(m.solutionCoordinates()));
   }
 }
