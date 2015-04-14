@@ -5,16 +5,20 @@ public class MyDeque<T> {
   private final int DEFAULT_SIZE = 10;
 
   private T[] items_;
+  private int[] priorities_;
   private int head_;
   private int tail_;
   private int size_;
+  private boolean isPriorityList_;
 
   @SuppressWarnings("unchecked")
   public MyDeque() {
     items_ = (T[]) (new Object[DEFAULT_SIZE]);
+    priorities_ = new int[DEFAULT_SIZE];
     head_ = 0;
     tail_ = DEFAULT_SIZE - 1;
     size_ = 0;
+    isPriorityList_ = false;
   }
 
   private int normalize(int n) {
@@ -33,37 +37,52 @@ public class MyDeque<T> {
       return;
     }
     
-    T[] newArray = (T[]) (new Object[newSize]);
+    T[] newItems = (T[]) (new Object[newSize]);
+    int[] newPriorities = new int[newSize];
     int copyCounter = 0;
     if (head_ <= tail_) {
       for (int i = head_; i <= tail_; ++i) {
-        newArray[copyCounter] = items_[i];
+        newItems[copyCounter] = items_[i];
+        newPriorities[copyCounter] = priorities_[i];
         copyCounter++;
       }
     } else {
       for (int i = head_; i < items_.length; ++i) {
-        newArray[copyCounter] = items_[i];
+        newItems[copyCounter] = items_[i];
+        newPriorities[copyCounter] = priorities_[i];
         copyCounter++;
       }
       for (int i = 0; i <= tail_; ++i) {
-        newArray[copyCounter] = items_[i];
+        newItems[copyCounter] = items_[i];
+        newPriorities[copyCounter] = priorities_[i];
         copyCounter++;
       }
     }
     head_ = 0;
     tail_ = size_ - 1;
-    items_ = newArray;
+    items_ = newItems;
+    priorities_ = newPriorities;
   }
 
   public boolean add(T item) {
+    if (isPriorityList_) {
+      throw new IllegalStateException();
+    }
     addLast(item);
     return true;
+  }
+
+  public void add(T item, int priority) {
+    addLast(item);
+    priorities_[tail_] = priority;
+    isPriorityList_ = true;
   }
 
   public void addFirst(T item) {
     resize();
     head_ = normalize(head_ - 1);
     items_[head_] = item;
+    priorities_[head_] = 1;
     size_++;
   }
 
@@ -71,10 +90,14 @@ public class MyDeque<T> {
     resize();
     tail_ = normalize(tail_ + 1);
     items_[tail_] = item;
+    priorities_[tail_] = 1;
     size_++;
   }
 
   public T getFirst() {
+    if (isPriorityList_) {
+      throw new IllegalStateException();
+    }
     if (size_ == 0) {
       throw new NoSuchElementException();
     }
@@ -82,13 +105,67 @@ public class MyDeque<T> {
   }
 
   public T getLast() {
+    if (isPriorityList_) {
+      throw new IllegalStateException();
+    }
     if (size_ == 0) {
       throw new NoSuchElementException();
     }
     return items_[tail_];
   }
 
+  public T removeSmallest() {
+    if (!isPriorityList_) {
+      throw new IllegalStateException();
+    }
+    if (size_ == 0) {
+      throw new NoSuchElementException();
+    }
+    size_--;
+    int smallestPriorityIndex = 0;
+    for (int i = 0; i < priorities_.length; ++i) {
+      if (priorities_[i] == 1) {
+        smallestPriorityIndex = i;
+        break;
+      }
+      if (priorities_[i] < priorities_[smallestPriorityIndex]) {
+        smallestPriorityIndex = i;
+      }
+    }
+
+    T toReturn = items_[smallestPriorityIndex];
+    items_[smallestPriorityIndex] = items_[head_];
+    priorities_[smallestPriorityIndex] = priorities_[smallestPriorityIndex];
+    head_ = normalize(head_ + 1);
+    return toReturn;
+  }
+
+  public T removeLargest() {
+    if (!isPriorityList_) {
+      throw new IllegalStateException();
+    }
+    if (size_ == 0) {
+      throw new NoSuchElementException();
+    }
+    size_--;
+    int largestPriorityIndex = 0;
+    for (int i = 0; i < priorities_.length; ++i) {
+      if (priorities_[i] > priorities_[largestPriorityIndex]) {
+        largestPriorityIndex = i;
+      }
+    }
+
+    T toReturn = items_[largestPriorityIndex];
+    items_[largestPriorityIndex] = items_[head_];
+    priorities_[largestPriorityIndex] = priorities_[largestPriorityIndex];
+    head_ = normalize(head_ + 1);
+    return toReturn;
+  }
+
   public T removeFirst() {
+    if (isPriorityList_) {
+      throw new IllegalStateException();
+    }
     if (size_ == 0) {
       throw new NoSuchElementException();
     }
@@ -99,6 +176,9 @@ public class MyDeque<T> {
   }
 
   public T removeLast() {
+    if (isPriorityList_) {
+      throw new IllegalStateException();
+    }
     if (size_ == 0) {
       throw new NoSuchElementException();
     }
@@ -116,38 +196,35 @@ public class MyDeque<T> {
     if (size_ == 0) {
       return "[ ]";
     }
-    String out = "[ ";
+    String dataOut = "[ ";
+    String priorityOut = "[ ";
     if (head_ <= tail_) {
       for (int i = head_; i <= tail_; ++i) {
-        out += items_[i] + " ";
+        dataOut += items_[i] + " ";
+        priorityOut += priorities_[i] + " ";
       }
     } else {
       for (int i = head_; i < items_.length; ++i) {
-        out += items_[i] + " ";
+        dataOut += items_[i] + " ";
+        priorityOut += priorities_[i] + " ";
       }
       for (int i = 0; i <= tail_; ++i) {
-        out += items_[i] + " ";
+        dataOut += items_[i] + " ";
+        priorityOut += priorities_[i] + " ";
       }
     }
-    return out + "]";
+    if (isPriorityList_) {
+      return dataOut + "]" + "\n" + priorityOut + "]";
+    }
+    return dataOut + "]";
   }
 
   public static void main(String[] args) {
     MyDeque<Integer> q = new MyDeque<Integer>();
-    q.add(1);
-    System.out.println(q + " " + q.size());
-    q.add(2);
+    q.add(1, 1);
+    q.add(2, 10);
+    q.add(3, 5);
     System.out.println(q);
-    q.addFirst(1);
-    System.out.println(q);
-    for (int i = 0; i < 10; ++i) {
-      q.addFirst(i);
-    System.out.println(q);
-    }
-    System.out.println(q.removeFirst() + " " + q);
-    System.out.println(q.removeFirst() + " " + q);
-    System.out.println(q.removeLast() + " " + q);
-    System.out.println(q.getFirst() + " " + q);
-    System.out.println(q.getLast() + " " + q);
+    System.out.println(q.removeLargest());
   }
 }
