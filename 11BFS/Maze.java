@@ -17,6 +17,10 @@ public class Maze {
       y_ = y;
       prev_ = prev;
     }
+
+    public String toString() {
+      return "(" + x_ + "," + y_ + ")";
+    }
   }
 
   private static final String CLEAR = "\033[2J";
@@ -25,10 +29,12 @@ public class Maze {
   private static final String RESET = "\033[0;0H";
   private static final int BREADTH_FIRST_MODE = 0;
   private static final int DEPTH_FIRST_MODE = 1;
+  private static final int A_STAR_MODE = 2;
 
   private String filename_;
   private char[][] maze_;
   private int[] startPoint_;
+  private int[] endPoint_;
   private LinkedList<Integer> solution_;
 
   public Maze(String filename) {
@@ -118,6 +124,7 @@ public class Maze {
         }
         if (maze_[i][j] == 'E') {
           e++;
+          endPoint_ = new int[] { i, j };
         }
       }
     }
@@ -138,27 +145,41 @@ public class Maze {
     }
   }
 
+  private int getPriorityDistance(int[] point) {
+    return Math.abs(point[0] - endPoint_[0]) + Math.abs(point[1] - endPoint_[1]);
+  }
+
   private boolean solve(boolean animate, int mode) {
-    MyDeque<MoveNode> moves = new MyDeque<MoveNode>();
+    PriorityDeque<MoveNode> moves = new PriorityDeque<MoveNode>();
     moves.add(new MoveNode(startPoint_[0], startPoint_[1], null));
 
     while (moves.size() != 0) {
       int numCurrentMoves = moves.size();
       for (int d = 0; d < numCurrentMoves; ++d) {
+
+        // Gets the next MoveNode depending on which solve algorithm
+        // we're using.
         MoveNode first;
         if (mode == BREADTH_FIRST_MODE) {
           first = moves.removeFirst();
         } else if (mode == DEPTH_FIRST_MODE) {
           first = moves.removeLast();
+        } else if (mode == A_STAR_MODE) {
+          first = moves.removeSmallest();
         } else {
           throw new Error("Invalid mode");
         }
+
+        // These are all the possible candidates for movement.
         int[][] candidates = new int[][] {
           new int[] { first.x_ + 1, first.y_ },
           new int[] { first.x_ - 1, first.y_ },
           new int[] { first.x_, first.y_ + 1 },
           new int[] { first.x_, first.y_ - 1}
         };
+
+        // Goes through all four candidates to try and find a valid
+        // solution.
         for (int[] candidate : candidates) {
           try {
             if (maze_[candidate[0]][candidate[1]] == 'E') {
@@ -174,11 +195,18 @@ public class Maze {
             }
             if (verifySquare(candidate)) {
               maze_[candidate[0]][candidate[1]] = '.';
-              moves.add(new MoveNode(candidate, first));
+              if (mode == A_STAR_MODE) {
+                moves.add(new MoveNode(candidate, first),
+                          getPriorityDistance(candidate));
+              } else {
+                moves.add(new MoveNode(candidate, first));
+              }
             }
           } catch (ArrayIndexOutOfBoundsException e) {}
         }
+
       }
+      System.out.println(moves);
       outputMaze(animate);
     }
     return false;
@@ -201,6 +229,14 @@ public class Maze {
     return solveDFS(false);
   }
 
+  public boolean solveAStar(boolean animate) {
+    return solve(animate, A_STAR_MODE);
+  }
+
+  public boolean solveAStar() {
+    return solveAStar(false);
+  }
+
   public int[] solutionCoordinates() {
     int[] out = new int[solution_.size()];
     int c = 0;
@@ -216,10 +252,12 @@ public class Maze {
       throw new Error("Usage: java Maze <bfs|dfs> <maze>");
     }
     Maze m = new Maze(args[1]);
-    if (args[1].equals("bfs")) {
+    if (args[0].equals("bfs")) {
       m.solveBFS(true);
     } else if (args[0].equals("dfs")) {
       m.solveDFS(true);
+    } else if (args[0].equals("a*")) {
+      m.solveAStar(true);
     } else {
       throw new Error("Invalid method");
     }
