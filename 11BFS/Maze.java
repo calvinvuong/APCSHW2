@@ -197,7 +197,7 @@ public class Maze {
               maze_[candidate[0]][candidate[1]] = '.';
               if (mode == A_STAR_MODE) {
                 moves.add(new MoveNode(candidate, first),
-                          getPriorityDistance(candidate));
+                          getPriorityDistance(candidate) + numCurrentMoves);
               } else {
                 moves.add(new MoveNode(candidate, first));
               }
