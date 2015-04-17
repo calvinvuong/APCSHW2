@@ -41,24 +41,11 @@ public class PriorityDeque<T> {
     T[] newItems = (T[]) (new Object[newSize]);
     int[] newPriorities = new int[newSize];
     int copyCounter = 0;
-    if (head_ <= tail_) {
-      for (int i = head_; i <= tail_; ++i) {
-        newItems[copyCounter] = items_[i];
-        newPriorities[copyCounter] = priorities_[i];
-        copyCounter++;
-      }
-    } else {
-      for (int i = head_; i < items_.length; ++i) {
-        newItems[copyCounter] = items_[i];
-        newPriorities[copyCounter] = priorities_[i];
-        copyCounter++;
-      }
-      for (int i = 0; i <= tail_; ++i) {
-        newItems[copyCounter] = items_[i];
-        newPriorities[copyCounter] = priorities_[i];
-        copyCounter++;
-      }
+    for (int i = head_; i < head_ + size_; ++i) {
+      newItems[i - head_] = items_[i % items_.length];
+      newPriorities[i - head_] = priorities_[i % priorities_.length];
     }
+
     head_ = 0;
     tail_ = size_ - 1;
     items_ = newItems;
@@ -109,50 +96,25 @@ public class PriorityDeque<T> {
     if (size_ == 0) {
       throw new NoSuchElementException();
     }
-    size_--;
     int priorityIndex = head_;
-    if (head_ <= tail_) {
-      for (int i = head_; i <= tail_; ++i) {
-        if (gt) {
-          if (priorities_[i] > priorities_[priorityIndex]) {
-            priorityIndex = i;
-          }
-        } else {
-          if (priorities_[i] < priorities_[priorityIndex]) {
-            priorityIndex = i;
-          }
+    for (int i = head_; i < head_ + size_ ; ++i) {
+      if (gt) {
+        if (priorities_[i % priorities_.length] >
+            priorities_[priorityIndex]) {
+          priorityIndex = i % priorities_.length;
         }
-      }
-    } else {
-      for (int i = head_; i < items_.length; ++i) {
-        if (gt) {
-          if (priorities_[i] > priorities_[priorityIndex]) {
-            priorityIndex = i;
-          }
-        } else {
-          if (priorities_[i] < priorities_[priorityIndex]) {
-            priorityIndex = i;
-          }
-        }
-      }
-      for (int i = 0; i <= tail_; ++i) {
-        if (gt) {
-          if (priorities_[i] > priorities_[priorityIndex]) {
-            priorityIndex = i;
-          }
-        } else {
-          if (priorities_[i] < priorities_[priorityIndex]) {
-            priorityIndex = i;
-          }
+      } else {
+        if (priorities_[i % priorities_.length] <
+            priorities_[priorityIndex]) {
+          priorityIndex = i % priorities_.length;
         }
       }
     }
+    size_--;
 
     T toReturn = items_[priorityIndex];
     items_[priorityIndex] = items_[head_];
-    items_[head_] = null;
     priorities_[priorityIndex] = priorities_[head_];
-    priorities_[head_] = 0;
     head_ = normalize(head_ + 1);
     return toReturn;
   }
@@ -195,33 +157,18 @@ public class PriorityDeque<T> {
     }
     String dataOut = "[ ";
     String priorityOut = "[ ";
-    if (head_ <= tail_) {
-      for (int i = head_; i <= tail_; ++i) {
-        dataOut += items_[i] + " ";
-        priorityOut += priorities_[i] + " ";
-      }
-    } else {
-      for (int i = head_; i < items_.length; ++i) {
-        dataOut += items_[i] + " ";
-        priorityOut += priorities_[i] + " ";
-      }
-      for (int i = 0; i <= tail_; ++i) {
-        dataOut += items_[i] + " ";
-        priorityOut += priorities_[i] + " ";
-      }
+    for (int i = head_; i < head_ + size_; ++i) {
+      dataOut += items_[i % items_.length] + " ";
+      priorityOut += priorities_[i % priorities_.length] + " ";
     }
     return dataOut + "]" + " " + priorityOut + "]";
   }
 
   public static void main(String[] args) {
     PriorityDeque<Integer> q = new PriorityDeque<Integer>();
-    q.add(1, 11);
-    q.add(2, 10);
-    q.add(3, 5);
-    q.add(4, 2);
-    q.add(5, 3);
-    q.add(6, 4);
-    q.add(7, 55);
+    for (int i = 0; i < 20; ++i) {
+      q.add(i, i);
+    }
     System.out.println(q);
     System.out.println(q.removeSmallest());
     System.out.println(q);
@@ -229,6 +176,8 @@ public class PriorityDeque<T> {
     System.out.println(q);
     System.out.println(q.removeSmallest());
     System.out.println(q);
-    System.out.println(q.removeSmallest());
+    System.out.println(q.removeLargest());
+    System.out.println(q);
+    System.out.println(q.removeLargest());
   }
 }
