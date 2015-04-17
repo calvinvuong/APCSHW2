@@ -184,7 +184,7 @@ public class Maze {
           try {
             if (maze_[candidate[0]][candidate[1]] == 'E') {
               while (first.prev_ != null) {
-                maze_[first.x_][first.y_] = '@';
+                maze_[first.x_][first.y_] = 'P';
                 solution_.addFirst(first.x_);
                 solution_.add(1, first.y_);
                 first = first.prev_;
@@ -249,7 +249,7 @@ public class Maze {
 
   public static void main(String[] args) {
     if (args.length != 2) {
-      throw new Error("Usage: java Maze <bfs|dfs> <maze>");
+      throw new Error("Usage: java Maze <bfs|dfs|a*> <maze>");
     }
     Maze m = new Maze(args[1]);
     if (args[0].equals("bfs")) {
