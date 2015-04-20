@@ -29,7 +29,8 @@ public class Maze {
   private static final String RESET = "\033[0;0H";
   private static final int BREADTH_FIRST_MODE = 0;
   private static final int DEPTH_FIRST_MODE = 1;
-  private static final int A_STAR_MODE = 2;
+  private static final int BEST_FIRST_MODE = 2;
+  private static final int A_STAR_MODE = 3;
 
   private String filename_;
   private char[][] maze_;
@@ -164,7 +165,7 @@ public class Maze {
           first = moves.removeFirst();
         } else if (mode == DEPTH_FIRST_MODE) {
           first = moves.removeLast();
-        } else if (mode == A_STAR_MODE) {
+        } else if (mode == BEST_FIRST_MODE || mode == A_STAR_MODE) {
           first = moves.removeSmallest();
         } else {
           throw new Error("Invalid mode");
@@ -195,7 +196,10 @@ public class Maze {
             }
             if (verifySquare(candidate)) {
               maze_[candidate[0]][candidate[1]] = '.';
-              if (mode == A_STAR_MODE) {
+              if (mode == BEST_FIRST_MODE) {
+                moves.add(new MoveNode(candidate, first),
+                          getPriorityDistance(candidate));
+              } else if (mode == A_STAR_MODE) {
                 moves.add(new MoveNode(candidate, first),
                           getPriorityDistance(candidate) + numCurrentMoves);
               } else {
@@ -229,6 +233,14 @@ public class Maze {
     return solveDFS(false);
   }
 
+  public boolean solveBestFirst(boolean animate) {
+    return solve(animate, BEST_FIRST_MODE);
+  }
+
+  public boolean solveBestFirst() {
+    return solveBestFirst(false);
+  }
+
   public boolean solveAStar(boolean animate) {
     return solve(animate, A_STAR_MODE);
   }
@@ -249,13 +261,15 @@ public class Maze {
 
   public static void main(String[] args) {
     if (args.length != 2) {
-      throw new Error("Usage: java Maze <bfs|dfs|a*> <maze>");
+      throw new Error("Usage: java Maze <bfs|dfs|bestfirst|a*> <maze>");
     }
     Maze m = new Maze(args[1]);
     if (args[0].equals("bfs")) {
       m.solveBFS(true);
     } else if (args[0].equals("dfs")) {
       m.solveDFS(true);
+    } else if (args[0].equals("bestfirst")) {
+      m.solveBestFirst(true);
     } else if (args[0].equals("a*")) {
       m.solveAStar(true);
     } else {
