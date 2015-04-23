@@ -35,7 +35,7 @@ public class GarbageTree<T> {
     }
 
     public boolean hasLeft() {
-      return left_ == null;
+      return left_ != null;
     }
 
     public void setLeft(TreeNode<T> left) {
@@ -47,7 +47,7 @@ public class GarbageTree<T> {
     }
 
     public boolean hasRight() {
-      return right_ == null;
+      return right_ != null;
     }
 
     public void setRight(TreeNode<T> right) {
@@ -73,72 +73,99 @@ public class GarbageTree<T> {
   }
 
   public void add (T value) {
-    add(root_, value);
+    if (root_ == null) {
+      root_ = new TreeNode<T>(value);
+    } else {
+      add(root_, new TreeNode<T>(value));
+    }
   }
 
   private void add(TreeNode<T> branch, TreeNode<T> newBranch) {
-    if (branch == null) {
-      branch = new TreeNode<T>(value);
-    } else if (branch.isLeaf()) {
+    if (branch.isLeaf()) {
       if (rand_.nextInt() % 2 == 0) {
-        branch.setLeft(new TreeNode<T>(value));
+        branch.setLeft(newBranch);;
       } else {
-        branch.setRight(new TreeNode<T>(value));
+        branch.setRight(newBranch);
       }
-    } else if (branch.hasLeft()) {
-      branch.setRight(new TreeNode<T>(value));
-    } else if (branch.hasRight()) {
-      branch.setLeft(new TreeNode<T>(value));
+    } else if (!branch.hasLeft()) {
+      branch.setLeft(newBranch);
+    } else if (!branch.hasRight()) {
+      branch.setRight(newBranch);
     } else {
       if (rand_.nextInt() % 2 == 0) {
-        add(branch.getLeft(), value);
+        add(branch.getLeft(), newBranch);
       } else {
-        add(branch.getRight(), value);
+        add(branch.getRight(), newBranch);
       }
     }
   }
 
   public void traverse(int mode) {
     if (mode == PRE_ORDER) {
-      System.out.println("PRE_ORDER");
       preOrder(root_);
     } else if (mode == IN_ORDER) {
       inOrder(root_);
     } else {
       postOrder(root_);
     }
+    System.out.println("");
   }
 
   public void preOrder(TreeNode<T> current) {
-    System.out.println(root_.getData());
     if (current == null) {
       return;
     } else if (current.isLeaf()) {
       System.out.println(current.getData());
       return;
     }
+    System.out.println(current);
     preOrder(current.getLeft());
     preOrder(current.getRight());
-    System.out.println(current.getData());
   }
 
   public void inOrder(TreeNode<T> current) {
+    if (current == null) {
+      return;
+    } else if (current.isLeaf()) {
+      System.out.println(current.getData());
+      return;
+    }
+    inOrder(current.getLeft());
+    System.out.println(current);
+    inOrder(current.getRight());
   }
 
   public void postOrder(TreeNode<T> current) {
+    if (current == null) {
+      return;
+    } else if (current.isLeaf()) {
+      System.out.println(current.getData());
+      return;
+    }
+    postOrder(current.getLeft());
+    postOrder(current.getRight());
+    System.out.println(current);
+  }
+
+  public int getHeight() {
+    return getHeight(root_);
+  }
+
+  public int getHeight(TreeNode<T> current) {
+    if (current.isLeaf()) {
+      return 1;
+    }
+    return 1 + Math.max(getHeight(current.getLeft()),
+                        getHeight(current.getRight()));
   }
 
   private String toString(TreeNode<T> current, String out) {
     if (current == null) {
       return "";
     }
-    if (current.isLeaf()) {
-      return out + current;
-    } else {
-      return current + "\n\t" +
-        toString(current.getLeft(), out) + "\n\t" +
-        toString(current.getRight(), out);
-    }
+    return current + "\n" +
+      toString(current.getLeft(), out) + " " +
+      toString(current.getRight(), out);
   }
 
   public String toString() {
@@ -151,8 +178,9 @@ public class GarbageTree<T> {
     t.add(2);
     t.add(3);
     t.traverse(GarbageTree.PRE_ORDER);
-    System.out.println(t);
     t.add(4);
-    System.out.println(t);
+    t.traverse(GarbageTree.POST_ORDER);
+    t.add(5);
+    t.traverse(GarbageTree.IN_ORDER);
   }
 }
