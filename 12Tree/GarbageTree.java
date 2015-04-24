@@ -92,7 +92,7 @@ public class GarbageTree<T> {
     } else if (!branch.hasRight()) {
       branch.setRight(newBranch);
     } else {
-      if (rand_.nextInt() % 2 == 0) {
+      if (getHeight(branch.getLeft()) < getHeight(branch.getRight())) {
         add(branch.getLeft(), newBranch);
       } else {
         add(branch.getRight(), newBranch);
@@ -152,6 +152,9 @@ public class GarbageTree<T> {
   }
 
   public int getHeight(TreeNode<T> current) {
+    if (current == null) {
+      return 0;
+    }
     if (current.isLeaf()) {
       return 1;
     }
@@ -159,17 +162,26 @@ public class GarbageTree<T> {
                         getHeight(current.getRight()));
   }
 
-  private String toString(TreeNode<T> current, String out) {
+  private String getLevel(TreeNode<T> current, int level) {
+    if (level > getHeight()) {
+      throw new Error("Y u do dis");
+    }
     if (current == null) {
       return "";
     }
-    return current + "\n" +
-      toString(current.getLeft(), out) + " " +
-      toString(current.getRight(), out);
+    if (level == 0) {
+      return current.toString();
+    }
+    return getLevel(current.getLeft(), level - 1) + " " +
+      getLevel(current.getRight(), level -1);
   }
 
   public String toString() {
-    return toString(root_, "");
+    String out = "";
+    for (int i = 0; i < getHeight(); ++i) {
+      out += getLevel(root_, i) + "\n";
+    }
+    return out;
   }
 
   public static void main(String[] args) {
@@ -177,10 +189,13 @@ public class GarbageTree<T> {
     t.add(1);
     t.add(2);
     t.add(3);
-    t.traverse(GarbageTree.PRE_ORDER);
+    System.out.println(t);
     t.add(4);
-    t.traverse(GarbageTree.POST_ORDER);
     t.add(5);
-    t.traverse(GarbageTree.IN_ORDER);
+    t.traverse(GarbageTree.PRE_ORDER);
+    System.out.println(t);
+    t.add(6);
+    t.add(7);
+    System.out.println(t);
   }
 }
