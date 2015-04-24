@@ -196,6 +196,12 @@ public class GarbageTree<T> {
     System.out.println(t);
     t.add(6);
     t.add(7);
+    t.add(8);
+    t.add(9);
+    System.out.println(t);
+    for (int i = 10; i < 15; ++i) {
+      t.add(i);
+    }
     System.out.println(t);
   }
 }
