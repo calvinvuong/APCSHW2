@@ -1,7 +1,7 @@
 import java.util.*;
 import java.io.*;
 
-public class GarbageTree<T> {
+public class BTree<T> {
 
   private class TreeNode<T> {
     private T data_;
@@ -67,7 +67,7 @@ public class GarbageTree<T> {
   private TreeNode<T> root_;
   private Random rand_;
 
-  public GarbageTree() {
+  public BTree() {
     root_ = null;
     rand_ = new Random(RANDOM_SEED);
   }
@@ -185,14 +185,14 @@ public class GarbageTree<T> {
   }
 
   public static void main(String[] args) {
-    GarbageTree<Integer> t = new GarbageTree<Integer>();
+    BTree<Integer> t = new BTree<Integer>();
     t.add(1);
     t.add(2);
     t.add(3);
     System.out.println(t);
     t.add(4);
     t.add(5);
-    t.traverse(GarbageTree.PRE_ORDER);
+    t.traverse(BTree.PRE_ORDER);
     System.out.println(t);
     t.add(6);
     t.add(7);
