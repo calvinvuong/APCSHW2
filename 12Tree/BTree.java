@@ -2,8 +2,9 @@ import java.util.*;
 import java.io.*;
 
 public class BTree<T> {
-
+  
   private class TreeNode<T> {
+  
     private T data_;
     private TreeNode<T> left_;
     private TreeNode<T> right_;
@@ -58,7 +59,7 @@ public class BTree<T> {
       return left_ == null && right_ == null;
     }
   }
-  
+
   private static final int RANDOM_SEED = 1337;
   public static final int PRE_ORDER = 0;
   public static final int IN_ORDER = 1;
