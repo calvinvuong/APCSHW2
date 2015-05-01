@@ -5,62 +5,66 @@ public class BSTree <T extends Comparable> {
 
   private class BSTreeNode<T extends Comparable> {
 
-    private T data;
-    private int tally;
-    private BSTreeNode<T> left;
-    private BSTreeNode<T> right;
+    private T data_;
+    private int tally_;
+    private BSTreeNode<T> left_;
+    private BSTreeNode<T> right_;
 
-    public BSTreeNode(T d) {
-      data = d;
-      tally = 1;
-      left = right = null;
+    public BSTreeNode(T data) {
+      data_ = data;
+      tally_ = 1;
+      left_ = right_ = null;
     }
 
     public T getData() {
-      return data;
+      return data_;
     }
     @SuppressWarnings("unchecked")
-    public int compareData(BSTreeNode<T> d) {
-      return data.compareTo(d.getData());
+    public int compareData(BSTreeNode<T> data) {
+      return data_.compareTo(data.getData());
+    }
+    @SuppressWarnings("unchecked")
+    public int compareData(T data) {
+      return data_.compareTo(data);
     }
     public BSTreeNode<T> getLeft() {
-      return left;
+      return left_;
     }
     public boolean hasLeft() {
-      return left != null;
+      return left_ != null;
     }
     public BSTreeNode<T> getRight() {
-      return right;
+      return right_;
     }
     public boolean hasRight() {
-      return right != null;
+      return right_ != null;
     }
 
-    public void setData(T d) {
-      data = d;
+    public void setData(T data) {
+      data_ = data;
     }
-    public void setLeft(BSTreeNode<T> l) {
-      left = l;
+    public void setLeft(BSTreeNode<T> left) {
+      left_ = left;
     }
-    public void setRight(BSTreeNode<T> r) {
-      right = r;
+    public void setRight(BSTreeNode<T> right) {
+      right_ = right;
     }
     public boolean isLeaf() {
-      return (left == null && right == null);
+      return (left_ == null && right_ == null);
     }
 
     public int getTally() {
-      return tally;
+      return tally_;
     }
     public void incrementCount() {
-      tally++;
+      tally_++;
     }
     public void decrementCount() {
-      tally--;
+      tally_--;
     }
     
     public String toString() {
-      return data + "(" + tally + ")";
+      return data_ + "";
     }
   }
   
@@ -73,57 +77,34 @@ public class BSTree <T extends Comparable> {
   public boolean isEmpty() {
     return root_ == null;
   }
-  /*======== public void add() ==========
-    Inputs:   T c  
-    Returns: 
-
-    Wrapper for the recursive add method
-    ====================*/
-  public void add(T c) {
-    root_ = add(root_, new BSTreeNode<T>(c));
+  
+  public void add(T value) {
+    root_ = add(root_, new BSTreeNode<T>(value));
   }
 
-  /*======== public BSTreeNode<T> add() ==========
-    Inputs:  BSTreeNode<T> curr
-    BSTreeNode<T> t 
-    Returns: 
-
-    Add t to the correct place in the tree root_ed at curr.
-    ====================*/
-  private BSTreeNode<T> add(BSTreeNode<T> curr, BSTreeNode<T> t) {
-    if (curr == null) {
-      return t;
-    } else if (curr.compareData(t) < 0) {
-      curr.setLeft(add(curr.getLeft(), t));
-    } else if (curr.compareData(t) > 0) {
-      curr.setRight(add(curr.getRight(), t));
+  private BSTreeNode<T> add(BSTreeNode<T> root, BSTreeNode<T> node) {
+    if (root == null) {
+      return node;
+    } else if (root.compareData(node) > 0) {
+      root.setLeft(add(root.getLeft(), node));
+    } else if (root.compareData(node) < 0) {
+      root.setRight(add(root.getRight(), node));
     } else {
-      curr.setRight(add(curr.getRight(), t));
-      // curr.incrementCount();
+      root.setRight(add(root.getRight(), node));
+      // root.incrementCount();
     }
-    return curr;
+    return root;
   }
 
-  /*======== public void remove() ==========
-    Inputs:   T c  
-    Returns: 
+  public void remove(T value) {
+    root_ = remove(root_, value);
+  }
+
+  private BSTreeNode<T> remove(BSTreeNode<T> root, T value) {
+    if (root.compareData(value) == 0) {
       
-    Wrapper for the recursive remove method
-    ====================*/
-  public void remove( T c ) {
-    root_ = remove(root_, c);
-  }
-
-  /*======== public BSTreeNode<T> remove() ==========
-    Inputs:   BSTreeNode<T> curr
-    T c
-    Returns: 
-
-    Should remove the value c from the tree root_ed at
-    curr, if it exists.
-    ====================*/
-  private BSTreeNode<T> remove(BSTreeNode<T> curr, T c) {
-    return null;
+    }
+    return root;
   }
 
   public void inOrder() {
@@ -142,7 +123,106 @@ public class BSTree <T extends Comparable> {
     System.out.println(current);
     inOrderHelper(current.getRight());
   }
-   
+  
+  public int getHeight(){
+    return getHeight(root_);
+  }
+
+  private int getHeight(BSTreeNode<T> branch){
+    if (branch == null) {
+      return 0;
+    } else {
+      return 1 + Math.max(getHeight(branch.getLeft()),
+                          getHeight(branch.getRight()));
+    }
+  }
+
+  /** STOLEN CODE **/
+  private int maxLength() {
+    if (root_ == null)
+      return 0;
+    return maxLength(root_);
+  }
+
+  private int maxLength(BSTreeNode<T> curr) {
+    int max = curr.toString().length();
+    int temp;
+    if (curr.getLeft() != null) {
+      temp = maxLength(curr.getLeft());
+      if (temp > max)
+        max = temp;
+    }
+    if (curr.getRight() != null) {
+      temp = maxLength(curr.getRight());
+      if (temp > max)
+        max = temp;
+    }
+    return max;
+  }
+
+  private String spaces(double n) {
+    String result = "";
+    for (int i = 0; i < n; i++)
+      result += " ";
+    return result;
+  }
+
+  private String getLevel(BSTreeNode<T> curr,
+                          int currLevel,
+                          int targetLevel,
+                          int height,
+                          int wordLength) {
+    if (currLevel == 1){
+      return curr.toString() + 
+        spaces(wordLength - curr.toString().length()) +
+        spaces(wordLength * 
+               Math.pow(2, height - targetLevel + 1) - 
+               wordLength);
+    }
+    String result = "";
+    if (curr.getLeft() != null) {
+      result += getLevel(curr.getLeft(),
+                         currLevel - 1,
+                         targetLevel,
+                         height,
+                         wordLength);
+    } else {
+      result += spaces(wordLength *
+                       Math.pow(2, height - targetLevel + currLevel - 1));
+    }
+    if (curr.getRight() != null) {
+      result += getLevel(curr.getRight(),
+                         currLevel - 1,
+                         targetLevel,
+                         height,
+                         wordLength);
+    } else {
+      result += spaces(wordLength *
+                       Math.pow(2, height - targetLevel + currLevel - 1));
+    }
+    return result;
+  }
+		
+  public String toString() {
+    if (root_ == null) {
+      return "";
+    }
+    String result = "";
+    int height = getHeight();
+    int wordLength = maxLength();
+    for (int level = 1; level < height; level++){
+      result += spaces(wordLength *
+                       Math.pow(2, height - level) - wordLength) +
+        getLevel(root_, level, level, height, wordLength)
+        .replaceFirst("\\s+$", "") + "\n";
+    }
+    result += getLevel(root_, height, height, height, wordLength)
+      .replaceFirst("\\s+$", "");
+				
+    return result;
+  }
+  /** END STOLEN CODE **/
+  
   public static void main( String[] args ) {
     BSTree<Integer> t = new BSTree<Integer>();
     t.add(1);
@@ -151,5 +231,6 @@ public class BSTree <T extends Comparable> {
     t.add(5);
     t.add(4);
     t.inOrder();
+    System.out.println(t);
   }
 }
