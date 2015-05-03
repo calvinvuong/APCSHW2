@@ -87,11 +87,8 @@ public class BSTree <T extends Comparable> {
       return node;
     } else if (root.compareData(node) > 0) {
       root.setLeft(add(root.getLeft(), node));
-    } else if (root.compareData(node) < 0) {
-      root.setRight(add(root.getRight(), node));
     } else {
       root.setRight(add(root.getRight(), node));
-      // root.incrementCount();
     }
     return root;
   }
@@ -100,9 +97,25 @@ public class BSTree <T extends Comparable> {
     root_ = remove(root_, value);
   }
 
+  public BSTreeNode<T> findReplacement(BSTreeNode<T> current) {
+    if (current == null) {
+      return null;
+    }
+    return current.hasLeft() ? findReplacement(current.getLeft()) : current;
+  }
+  
   private BSTreeNode<T> remove(BSTreeNode<T> root, T value) {
-    if (root.compareData(value) == 0) {
-      
+    if (root == null) {
+      return root;
+    } else if (root.isLeaf() && root.compareData(value) == 0) {
+      return null;
+    } else if (root.compareData(value) > 0) {
+      root.setLeft(remove(root.getLeft(), value));
+    } else if (root.compareData(value) < 0) {
+      root.setRight(remove(root.getRight(), value));
+    } else {
+      root.setData(findReplacement(root.getRight()).getData());
+      root.setRight(remove(root.getRight(), root.getData()));
     }
     return root;
   }
@@ -225,12 +238,13 @@ public class BSTree <T extends Comparable> {
   
   public static void main( String[] args ) {
     BSTree<Integer> t = new BSTree<Integer>();
-    t.add(1);
-    t.add(2);
     t.add(3);
     t.add(5);
     t.add(4);
+    t.add(8);
+    t.add(1);
     t.inOrder();
+    t.remove(5);
     System.out.println(t);
   }
 }
