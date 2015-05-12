@@ -50,13 +50,14 @@ public class MyHeap {
     }
   }
 
-  private void pushMaThingy(int node) {
+  private void pushTheThingy(int node) {
+    // WIP doesn't completely work
     if (compare(getLeft(node), getRight(node))) {
-      swap(node, getLeft(node));
-      pushMaThingy(getLeft(node));
-    } else {
-      swap(node, getRight(node));
-      pushMaThingy(getRight(node));
+      data_[node] = data_[getLeft(node)];
+      pushTheThingy(getLeft(node));
+    } else if (compare(getRight(node), getLeft(node))) {
+      data_[node] = data_[getRight(node)];
+      pushTheThingy(getRight(node));
     }
   }
   
