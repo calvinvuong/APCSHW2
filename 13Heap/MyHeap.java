@@ -42,22 +42,18 @@ public class MyHeap {
     if (node == 1) {
       return;
     } else if (compare(node, getParent(node))) {
-      System.out.println(this);
       swap(node, getParent(node));
       doSwappyThingy(getParent(node));
-    } else if (compare(node, getLeft(getParent(node)))) {
-      swap(node, getLeft(getParent(node)));
     }
   }
 
   private void pushTheThingy(int node) {
-    // WIP doesn't completely work
-    if (compare(getLeft(node), getRight(node))) {
-      data_[node] = data_[getLeft(node)];
+    if (getLeft(node) > data_[0]) {
+      return;
+    }
+    if (!compare(node, getLeft(node))) {
+      swap(node, getLeft(node));
       pushTheThingy(getLeft(node));
-    } else if (compare(getRight(node), getLeft(node))) {
-      data_[node] = data_[getRight(node)];
-      pushTheThingy(getRight(node));
     }
   }
   
@@ -76,11 +72,15 @@ public class MyHeap {
     resize();
   }
 
-  public void remove() {
+  public int remove() {
     if (data_[0] == 0) {
       throw new NoSuchElementException();
     }
     int tmp = data_[1];
+    data_[1] = data_[data_[0]];
+    pushTheThingy(1);
+    data_[0]--;
+    return tmp;
   }
 
   public int peek() {
@@ -91,17 +91,29 @@ public class MyHeap {
   }
   
   public String toString() {
+    String out = "";
+    int i = 1;
+    int j = 1;
+    for (; i < data_[0]; j += 2) {
+      int tmp = i + j;
+      for (; i < tmp; ++i) {
+        out += data_[i] + " ";
+      }
+      out += "\n";
+    }
     return Arrays.toString(data_);
   }
 
   public static void main(String[] args) {
-    MyHeap h = new MyHeap(false);
+    MyHeap h = new MyHeap(true);
     h.add(4);
     h.add(3);
     h.add(5);
     h.add(10);
     h.add(12);
     h.add(1);
+    System.out.println(h);
+    System.out.println(h.remove());
     System.out.println(h);
   }
 }
