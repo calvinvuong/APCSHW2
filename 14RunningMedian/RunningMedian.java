@@ -56,6 +56,12 @@ public class RunningMedian {
     System.out.println(q + " " + q.getMedian());
     q.add(0);
     System.out.println(q + " " + q.getMedian());
+    q.add(13);
+    q.add(14);
+    q.add(356);
+    q.add(-1);
+    q.add(4);
+    System.out.println(q + " " + q.getMedian());
   }
 }
 
