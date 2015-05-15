@@ -45,6 +45,10 @@ public class Maze {
     solution_ = new LinkedList<Integer>();
   }
 
+  public String name() {
+    return "lin.alvin";
+  }
+  
   /**
    * Precondition: the maze must be a rectangular thingy of text.
    * The maze cannot be empty

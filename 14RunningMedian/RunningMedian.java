@@ -8,6 +8,10 @@ public class RunningMedian {
     largeHalf_ = new MyHeap(false);
   }
 
+  public String name() {
+    return "lin.alvin";
+  }
+  
   private void rebalance() {
     while (largeHalf_.size() - smallHalf_.size() > 1) {
       smallHalf_.add(largeHalf_.remove());

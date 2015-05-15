@@ -10,7 +10,7 @@ public class MyDeque<T> {
   private int tail_;
   private int size_;
   private boolean isPriorityList_;
-
+  
   @SuppressWarnings("unchecked")
   public MyDeque() {
     items_ = (T[]) (new Object[DEFAULT_SIZE]);
@@ -21,6 +21,10 @@ public class MyDeque<T> {
     isPriorityList_ = false;
   }
 
+  public String name() {
+    return "lin.alvin";
+  }
+  
   private int normalize(int n) {
     while (n < items_.length) {
       n += items_.length;

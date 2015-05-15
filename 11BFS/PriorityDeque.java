@@ -22,6 +22,10 @@ public class PriorityDeque<T> {
     size_ = 0;
   }
 
+  public String name() {
+    return "lin.alvin";
+  }
+  
   private int normalize(int n) {
     while (n < items_.length) {
       n += items_.length;

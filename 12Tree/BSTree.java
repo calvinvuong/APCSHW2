@@ -74,6 +74,10 @@ public class BSTree <T extends Comparable> {
     root_ = null;
   }
 
+  public String name() {
+    return "lin.alvin";
+  }
+  
   public boolean isEmpty() {
     return root_ == null;
   }

@@ -8,6 +8,10 @@ public class MyQueue<T> {
     linkedList_ = new MyLinkedList<T>();
   }
 
+  public String name() {
+    return "lin.alvin";
+  }
+  
   public boolean enqueue(T t) {
     if (t == null) {
       throw new NullPointerException();

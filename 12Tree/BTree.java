@@ -73,6 +73,10 @@ public class BTree<T> {
     rand_ = new Random(RANDOM_SEED);
   }
 
+  public String name() {
+    return "lin.alvin";
+  }
+  
   public void add (T value) {
     if (root_ == null) {
       root_ = new TreeNode<T>(value);

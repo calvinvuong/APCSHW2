@@ -16,6 +16,10 @@ public class MyHeap {
     this(true);
   }
 
+  public String name() {
+    return "lin.alvin";
+  }
+  
   private void swap(int i1, int i2) {
     int tmp = data_[i1];
     data_[i1] = data_[i2];

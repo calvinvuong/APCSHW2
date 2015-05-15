@@ -7,6 +7,10 @@ public class MyStack<T> {
     linkedList_ = new MyLinkedList<T>();
   }
 
+  public String name() {
+    return "lin.alvin";
+  }
+  
   public void push(T t) {
     if (t == null) {
       throw new NullPointerException();
