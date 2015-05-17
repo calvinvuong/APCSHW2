@@ -5,7 +5,7 @@ public class Sorts {
   public static String name() {
     return "lin.alvin";
   }
-
+  
   /**
    * Swaps two elements in an array.
    * @param a The array of elements.
@@ -27,6 +27,41 @@ public class Sorts {
     for (int i = 0; i < a.length; ++i) {
       int randIndex = rand.nextInt(a.length - i) + i;
       swap(a, i, randIndex);
+    }
+  }
+
+  /**
+   * Selection sorts a given array of integers.
+   * @param a The array of integers to sort.
+   */
+  public static void selection(int[] a) {
+    for (int i = 0; i < a.length - 1; ++i) {
+      int minIndex = i;
+      for (int j = i + 1; j < a.length; ++j) {
+        if (a[j] < a[minIndex]) {
+          minIndex = j;
+        }
+      }
+      if (minIndex != i) {
+        swap(a, i, minIndex);
+      }
+    }
+  }
+
+  /**
+   * Insertion sorts a given array of integers.
+   * @param a The array of integers to sort.
+   */
+  public static void insertion(int[] a) {
+    int tmp, track;
+    for (int i = 1; i < a.length; ++i) {
+      tmp = a[i];
+      track = i;
+      while (track > 0 && tmp < a[track - 1]) {
+        a[track] = a[track - 1];
+        track--;
+      }
+      a[track] = tmp;
     }
   }
 
@@ -82,7 +117,7 @@ public class Sorts {
   }
 
   /**
-   * Quicksorts a given integer array.
+   * Quicksorts a given array of integers.
    * @param a The array of integers to sort.
    */
   public static void quicksort(int[] a) {
@@ -154,8 +189,8 @@ public class Sorts {
   }
 
   /**
-   * Merge sorts a given array.
-   * @param a The array to merge sort.
+   * Mergesorts a given array of integers.
+   * @param a The array of integers to sort.
    */
   public static void mergesort(int[] a) {
     int[] q = Sorts.sort(a);
