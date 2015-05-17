@@ -86,8 +86,8 @@ public class MyHeap {
     }
     int tmp = data_[1];
     data_[1] = data_[data_[0]];
-    pushTheThingy(1);
     data_[0]--;
+    pushTheThingy(1);
     return tmp;
   }
 
@@ -110,7 +110,7 @@ public class MyHeap {
   }
 
   public static void main(String[] args) {
-    MyHeap h = new MyHeap(true);
+    MyHeap h = new MyHeap(false);
     h.add(4);
     h.add(3);
     h.add(5);
