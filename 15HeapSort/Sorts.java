@@ -263,15 +263,18 @@ public class Sorts {
       return;
     } else if (a[node] < a[getRight(node)]) {
       swap(a, node, getRight(node));
+      //      System.out.println(Arrays.toString(a));
       pushDown(a, getRight(node), max);
     } else if (a[node] < a[getLeft(node)]) {
       swap(a, node, getLeft(node));
+      //      System.out.println(Arrays.toString(a));
       pushDown(a, getLeft(node), max);
     }
   }
   
   /**
-   * Turns a given array, turns it into valid representation of a heap.
+   * Given an array of integers, turns it into a valid internal representation
+   * of a heap.
    * @param a The array to turn into a heap.
    */
   private static void heapify(int[] a) {
@@ -287,7 +290,9 @@ public class Sorts {
   private static void extractSortedFromHeap(int[] a) {
     for (int i = 0; i < a.length; ++i) {
       swap(a, 0, a.length - 1 - i);
+      System.out.println(Arrays.toString(a));
       pushDown(a, 0, a.length - 1 - i);
+      System.out.println(Arrays.toString(a));
     }
   }
 
@@ -307,6 +312,5 @@ public class Sorts {
     Sorts.heapify(a);
     System.out.println(Arrays.toString(a));
     Sorts.extractSortedFromHeap(a);
-    System.out.println(Arrays.toString(a));
   }
 }
