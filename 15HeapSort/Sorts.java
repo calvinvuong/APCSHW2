@@ -261,6 +261,9 @@ public class Sorts {
   private static void pushDown(int[] a, int node, int max) {
     if (getLeft(node) >= max) {
       return;
+    } else if (a[node] < a[getRight(node)]) {
+      swap(a, node, getRight(node));
+      pushDown(a, getRight(node), max);
     } else if (a[node] < a[getLeft(node)]) {
       swap(a, node, getLeft(node));
       pushDown(a, getLeft(node), max);
