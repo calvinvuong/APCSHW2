@@ -58,6 +58,9 @@ public class MyHeap {
     if (!compare(node, getLeft(node))) {
       swap(node, getLeft(node));
       pushTheThingy(getLeft(node));
+    } else if (!compare(node, getRight(node))) {
+      swap(node, getRight(node));
+      pushTheThingy(getRight(node));
     }
   }
   
