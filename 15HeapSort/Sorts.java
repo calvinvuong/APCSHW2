@@ -65,6 +65,8 @@ public class Sorts {
     }
   }
 
+  // QUICKSORT AND QUICKSELECT
+  
   /**
    * Partition function for the quicksort
    * @param a The array to partition.
@@ -117,14 +119,6 @@ public class Sorts {
   }
 
   /**
-   * Quicksorts a given array of integers.
-   * @param a The array of integers to sort.
-   */
-  public static void quicksort(int[] a) {
-    quicksortH(a, 0, a.length - 1);
-  }
-
-  /**
    * Private helper method for the quicksort.
    * @param a The array of integers to sort.
    * @param s The starting index (inclusive).
@@ -139,6 +133,16 @@ public class Sorts {
     quicksortH(a, pivot + 1, e);
   }
 
+  /**
+   * Quicksorts a given array of integers.
+   * @param a The array of integers to sort.
+   */
+  public static void quicksort(int[] a) {
+    quicksortH(a, 0, a.length - 1);
+  }
+
+  // MERGESORT
+  
   /**
    * Merges two sorted arrays.
    * @param a1 The first sorted array.
@@ -181,11 +185,10 @@ public class Sorts {
     if (a.length == 1) {
       return a;
     }
-
     int[] sub1 = Arrays.copyOfRange(a, 0, a.length / 2);
     int[] sub2 = Arrays.copyOfRange(a, a.length / 2, a.length);
 
-    return merge(sort(sub1), sort(sub2));
+    return merge(mergesortH(sub1), mergesortH(sub2));
   }
 
   /**
@@ -193,19 +196,114 @@ public class Sorts {
    * @param a The array of integers to sort.
    */
   public static void mergesort(int[] a) {
-    int[] q = Sorts.sort(a);
+    int[] q = mergesortH(a);
     for (int i = 0; i < q.length; ++i) {
       a[i] = q[i];
     }
   }
 
-  public static void heapify(int[] a) {
+  // HEAPSORT
+
+  /**
+   * Given the index of a node in a heap tree's internal array representation,
+   * returns the index of the left child of that node in the heap tree.
+   * @param node The index of the starting node.
+   * @return The index of the left child of the starting node.
+   */
+  private static int getLeft(int node) {
+    return (2 * node) + 1;
   }
 
-  public static void heapsort(int[] a) {
+  /**
+   * Given the index of a node in a heap tree's internal array representation,
+   * returns the index of the right child of that node in the heap tree.
+   * @param node The index of the starting node.
+   * @return The index of the right child of the starting node.
+   */
+  private static int getRight(int node) {
+    return 2 * (node + 1);
   }
 
+  /**
+   * Given the index of a node in a heap tree's internal array representation,
+   * returns the index of the parent of the given node in the heap tree.
+   * @param node The index of the starting node.
+   * @return The index of the parent of the starting node.
+   */
+  private static int getParent(int node) {
+    return (node - 1) / 2;
+  }
+
+  /**
+   * Pushes up the element at the given index to turn the given array into the
+   * valid internal representation of a max-heap.
+   * @param a The given array to turn into a max-heap.
+   * @param node The index of the element to push up.
+   */
+  private static void pushUp(int[] a, int node) {
+    if (node == 0) {
+      return;
+    } else if (a[node] > a[getParent(node)]) {
+      swap(a, node, getParent(node));
+      pushUp(a, getParent(node));
+    }
+  }
+
+  /**
+   * Pushes down the element at the given index to its correct position in
+   * the given array given the consideration that the array is the internal
+   * representation of a max-heap. Takes a third parameter to indicate the
+   * lowest position that the element will go to.
+   * @param a The given array representing a valid max-heap.
+   * @param node The index of the element to push down.
+   * @param max The maximum index to push the element to (exclusive).
+   */
+  private static void pushDown(int[] a, int node, int max) {
+    if (getLeft(node) >= max) {
+      return;
+    } else if (a[node] < a[getLeft(node)]) {
+      swap(a, node, getLeft(node));
+      pushDown(a, getLeft(node), max);
+    }
+  }
   
+  /**
+   * Turns a given array, turns it into valid representation of a heap.
+   * @param a The array to turn into a heap.
+   */
+  private static void heapify(int[] a) {
+    for (int i = a.length - 1; i >= 0; --i) {
+      pushUp(a, i);
+    }
+  }
+
+  /**
+   * Extracts an array of sorted integers from a valid heap.
+   * @param a The internal array representation of a valid heap.
+   */
+  private static void extractSortedFromHeap(int[] a) {
+    for (int i = 0; i < a.length; ++i) {
+      swap(a, 0, a.length - 1 - i);
+      pushDown(a, 0, a.length - 1 - i);
+    }
+  }
+
+  /**
+   * Heapsorts a given array of integers.
+   * @param a The array of integers to sort.
+   */
+  public static void heapsort(int[] a) {
+    heapify(a);
+    extractSortedFromHeap(a);
+  }
+
   public static void main(String[] args) {
+    int[] a = new int[] {
+      3, 4, 2, 5, 6, 1, 10
+    };
+    Sorts.heapify(a);
+    System.out.println(Arrays.toString(a));
+    Sorts.extractSortedFromHeap(a);
+    System.out.println(Arrays.toString(a));
   }
 }
